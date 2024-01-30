@@ -15,9 +15,10 @@ export const getUsers = async () =>{
 }
 
 
-export const registerUser = async (username, publicKey) =>{
+export const registerUser = async (username, password, publicKey) =>{
     const data = {
         username: username,
+        password: password,
         public_key: publicKey
     };
 
@@ -31,6 +32,26 @@ export const registerUser = async (username, publicKey) =>{
     // Lidando com erros
     console.error('Erro na requisição:', error);
   });
+
+}
+
+export const loginUser = async (username, password, publicKey) =>{
+  const data = {
+      username: username,
+      password: password,
+      public_key: publicKey
+  };
+
+  const registerEndpoint = 'http://127.0.0.1:5000/login';
+  axios.post(registerEndpoint, data)
+.then(response => {
+  // Manipulando os dados da resposta
+  console.log('Dados da resposta:', response.data);
+})
+.catch(error => {
+  // Lidando com erros
+  console.error('Erro na requisição:', error);
+});
 
 }
 
