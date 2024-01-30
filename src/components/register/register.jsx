@@ -1,7 +1,6 @@
 import { registerUser} from "../../service/user_service.js"
-import {generateKeyPair} from "../../service/keys_service.js";
 import { useNavigate } from "react-router-dom";
-
+import EC from 'elliptic';
 
 function Register({setters}) {
     const { setState, setUsername, setKeys} = setters;
@@ -17,18 +16,21 @@ function Register({setters}) {
 
         const username = usernameInput.value;
         const password = passwordInput.value;
-        if(!keys.privateKey){
-          const newKeys = await generateKeyPair()
-          keys.publicKey = newKeys.publicKey
-          keys.privateKey = newKeys.privateKey
-          console.log(newKeys.publicKey)
-          localStorage.setItem("privateKey", keys.privateKey)
-          localStorage.setItem("publicKey", keys.publicKey)
-        }
+        
+        const ellipicCurve = new EC.ec('secp256k1');
+        const keyPair = ellipicCurve.genKeyPair();
+        const privateKey = keyPair.getPrivate('hex')
+        const publicKey = keyPair.getPublic('hex');
+        console.log(keyPair)
+        console.log(privateKey)
+        console.log(publicKey)
+      
 
         // Registre o usuário
-        registerUser(username, password, keys.publicKey); // Supondo que registerUser 
-
+        const response = await registerUser(username, password, publicKey); // Supondo que registerUser 
+        if (response == 200){
+          alert("usuário registrado")
+        }
         // Atualize o estado
         setState("login");
         navigate('', { replace: true })
