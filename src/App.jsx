@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import Login from './components/login/login'
 import ListUsers from './components/list_users/list_users'
 import Chat from './components/chat/chat'
+import Register from './components/register/register'
+import axios from 'axios'
 import './App.css'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -15,8 +17,7 @@ function App() {
   
   useEffect(()=>{
     return async () => {
-      socket.disconnect();
-      resoponse_logout = await axios.post("http://127.0.0.1:5000/logout", {"username":username})
+      // resoponse_logout = await axios.post("http://127.0.0.1:5000/logout", {"username":username})
     };
   },[])
   
@@ -27,7 +28,8 @@ function App() {
         
         <Route path="/users" element={<ListUsers setters={{ setState, setReceiverData, username, socket }} />} />
         <Route path="/chat" element={<Chat getters={{ username, setReceiverData, receiverData, keys, socket }} />} />
-        <Route exact path="/" element={<Login setters={{ setState, setUsername, setKeys, setSocket }} />} />
+        <Route path="/register" element={<Register setters={{ setState, setUsername, setKeys, setSocket }} />} />
+        <Route exact path="/" element={<Login setters={{ setState, setUsername, setKeys}} />} />
       </Routes>
     </>
   )

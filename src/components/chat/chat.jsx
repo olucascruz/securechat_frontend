@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import {decryptData, encryptData} from "../../service/cryptography_service.js"
+import {decryptMessage, encryptMessage} from "../../service/cryptography_service.js"
 import axios from 'axios';
 
 

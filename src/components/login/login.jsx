@@ -1,7 +1,7 @@
-import { registerUser} from "../../service/user_service"
-import {genarateKeys} from "../../service/keys_service";
+import { loginUser } from "../../service/user_service"
+import {generateKeyPair} from "../../service/keys_service";
 import { useEffect } from "react";
-import {decryptData, encryptData} from "../../service/cryptography_service.js"
+import {decryptMessage, encryptMessage} from "../../service/cryptography_service.js"
 import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ function Login({setters}) {
     
     },[])
 
-    const connect_with_socket = () =>{
+    const connectWithSocket = () =>{
       let connection = null
       try{
         connection = io('http://127.0.0.1:5000')
@@ -38,7 +38,7 @@ function Login({setters}) {
         const usernameInput = document.getElementById("iusername");
         const username = usernameInput.value;
         if(!keys.privateKey){
-          const newKeys = await genarateKeys()
+          const newKeys = await generateKeyPair()
           keys.publicKey = newKeys.publicKey
           keys.privateKey = newKeys.privateKey
           localStorage.setItem("privateKey", keys.privateKey)
@@ -46,15 +46,12 @@ function Login({setters}) {
         }
 
         // Registre o usuário
-        registerUser(username, keys.publicKey); // Supondo que registerUser requer um username e uma publicKey
-        // const message = await encryptData(keys.publicKey, "ola mundo")
-        // const newMessage = await decryptData(keys.privateKey, message)
-        // console.log(newMessage)
+        loginUser(username, password, keys.publicKey); // Supondo que registerUser 
         // Atualize o estado
         setKeys(keys);
         setUsername(username);
         setState("list_users");
-        connect_with_socket()
+        // connectWithSocket()
         navigate('users', { replace: true })
       };
 
@@ -62,11 +59,16 @@ function Login({setters}) {
     
       return (
         <>
+        <h3>Login</h3>
           <form id="formName" onSubmit={handleSubmit}>
             <p>Username</p>
-            <input required id="iusername" type="text" />
+            <input placeholder="username" required id="iusername" type="text" />
+            <p>Password</p>
+            <input placeholder="password" required id="ipassword" type="text" />
+            <br />
             <button type="submit">send</button>
           </form>
+          <a href="/register">register</a>
         </>
       );
     }
