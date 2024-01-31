@@ -4,11 +4,11 @@ import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 import crypto from 'crypto';
 import EC from 'elliptic';
+import { useUserContext } from "../../utils/userContext";
 
 
-
-function Login({setters}) {
-    const { setState, setUserdata, setKeys, setSocket } = setters;
+function Login() {
+    const { setState, setUserdata, setKeys, setSocket } = useUserContext()
     let keys = {"privateKey":"",
                 "publicKey":"",
                 "keyPair":"",
@@ -54,17 +54,20 @@ function Login({setters}) {
         keys.keyPair = keyPair
         keys.ec = ellipicCurve
 
+        
 
-        localStorage.setItem("privateKey", keys.privateKey)
-        localStorage.setItem("publicKey", keys.publicKey)
-        localStorage.setItem("keyPair", keyPair)
-
+        
         // Registre o usuário
         const response = await loginUser(username, password, publicKey);
         console.log(response)
 
         if(response.status == 200){
           const userId = response.data["id"]
+          sessionStorage.setItem("privateKey", keys.privateKey);
+          sessionStorage.setItem("publicKey", keys.publicKey);
+          sessionStorage.setItem("username", username);
+          sessionStorage.setItem("userId", userId);
+
 
           // Atualize o estado
           setKeys(keys);

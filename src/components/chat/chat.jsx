@@ -1,59 +1,92 @@
-import { useEffect, useState } from 'react';
-import {decryptMessage, encryptMessage} from "../../service/cryptography_service.js"
-import axios from 'axios';
+import {useEffect, useState } from 'react';
+import { useUserContext } from '../../utils/userContext';
+import EC from 'elliptic';
+import io from 'socket.io-client';
 
 
-function Chat({getters}) {
-    const {username, setReceiverData, receiverData, keys, socket} = getters
+function Chat() {
+    const {userdata, setUserdata, receiverData, setReceiverData, keys, setKeys, socket, setSocket} = useUserContext()
+
+    const [keyPair, setKeyPair] = useState(false)
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
-
+    const connectWithSocket = () =>{
+      let connection = null
+      try{
+        connection = io('http://127.0.0.1:5000')
+        setSocket(connection)
+        console.log("connected")
+      }catch(error){
+        console.log(error)
+      }
+    }
     useEffect(()=>{
+      connectWithSocket()
+      // console.log("receiver data:",receiverData)
+      const dataName = sessionStorage.getItem("username")
+      const dataId = sessionStorage.getItem("userId")
+      const recoverData = {"username":dataName, "id":dataId}
+
+      setUserdata(recoverData)
+      const ec_1 = new EC.ec('secp256k1');
+      const dataPrivateKey = sessionStorage.getItem("privateKey")
+      setKeyPair(ec_1.keyFromPrivate(dataPrivateKey, 'hex'));
+      const new_keys = {"privteKey":dataPrivateKey}
+      setKeys(new_keys)
+
+
+      const receiverId = sessionStorage.getItem("receiverId");
+      const receiverUsername = sessionStorage.getItem("receiverUsername");
+      const receiverPublicKey = sessionStorage.getItem("receiverPublicKey");
+      const receiverIsOnline = sessionStorage.getItem("receiverIsOnline");
+
+      const receiverData = {
+        id: receiverId || '', // Definir um valor padrão vazio se o item não estiver presente
+        username: receiverUsername || '',
+        publicKey: receiverPublicKey || '',
+        is_online: receiverIsOnline === "true", // Converter para booleano se necessário
+      };
+      console.log(receiverData)
+
+      setReceiverData(receiverData)
       // if(!username) navigate("/")
     },[])
 
     useEffect(()=>{
-      if(!socket) return
-      socket.on(`message-${username}`, async (data) => {
-       
-        const newMessage = await decryptData(keys.privateKey, data.message)
-        data.message = newMessage
-        setMessages([...messages, data])
-      })
-
-    }, [socket, messages])
-
-    useEffect(()=>{
-      if(!socket) return
-      socket.on('jsonChanged', async (data) => {
-        const usersArray = Object.keys(data).map(key => ({
-          username: key,
-          ...result[key]
-      }));
-
-      usersArray.forEach(el => {
-        if (el.username == username ){
-          setReceiverData(el)      
-        }
-      });
-      
-      setUsers(usersArray)
-
-      })
-
-    }, [socket])
-
+      const handleMessage = (data) => {
+        console.log("message",data);
+        setMessages(prevMessages => [...prevMessages, data]);
+      };
+      if(socket) socket.on(`message-${userdata["id"]}`, handleMessage);
+    },[messages, socket])
     
-    const sendMessage = async (event) =>{
-        event.preventDefault()
-        let objMyMsg = {
-          user: username,
-          message:inputValue
-        }
-        setMessages([...messages, objMyMsg])
-        const message = await encryptData(receiverData.public_key, inputValue)
-        socket.emit('message', {user:username, message:message, receiver:receiverData.username});
-    }
+    const sendMessage = async (event) => {
+      try {
+          event.preventDefault();
+  
+          // Constrói o objeto da mensagem do usuário atual
+          const userMessage = {
+              username: userdata["username"],
+              message: inputValue
+          };
+  
+          // Atualiza o estado com a nova mensagem
+          setMessages([...messages, userMessage]);
+  
+          // Emite a mensagem via socket para o destinatário
+          console.log("receiver", receiverData);
+          if(!socket) return
+          socket.emit('message', {
+              username: userdata["username"],
+              message: inputValue,
+              receiver: receiverData.id
+          });
+      } catch (error) {
+          console.error("Erro ao enviar mensagem:", error);
+          // Adicione aqui o tratamento adequado para o erro, se necessário
+      }
+  };
+  
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);
@@ -61,12 +94,13 @@ function Chat({getters}) {
 
     return (
       <>
+      <h3>{userdata["username"]} conversando com {receiverData["username"]} com o id: {receiverData["id"]}</h3>
         <div id="chat">
             <p>Chat</p>
             <ul id="msgs">
                 {messages.map((message, index)=>{
                     return <li key={index}>
-                        {message.user}:{message.message}
+                        {message.username}:{message.message}
                     </li>
                 })}
             </ul>
