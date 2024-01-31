@@ -6,12 +6,12 @@ import EC from 'elliptic';
 // ----------------------------------------------------------------------------------------------------
 const ec_1 = new EC.ec('secp256k1');
 const ec_2 = new EC.ec('secp256k1');
+const ec_3 = new EC.ec('secp256k1');
 
 // ----------------------------------------------------------------------------------------------------
 // Pessoa A - Geração de chave privada e extração da chave pública
 // ----------------------------------------------------------------------------------------------------
-const chavePrivadaA = ec_1.genKeyPair();
-const chavePublicaA = chavePrivadaA.getPublic('hex');
+const CPRA = ec_1.genKeyPair();
 
 // ----------------------------------------------------------------------------------------------------
 // Pessoa B - Geração de chave privada e extração da chave pública
@@ -22,7 +22,24 @@ const chavePublicaB = chavePrivadaB.getPublic('hex');
 // ----------------------------------------------------------------------------------------------------
 // Pessoa A envia sua chave pública para Pessoa B
 // ----------------------------------------------------------------------------------------------------
-console.log('Pessoa A enviou sua chave pública para Pessoa B:', chavePublicaA);
+//console.log('Pessoa A enviou sua chave pública para Pessoa B:', chavePublicaA);
+
+const chavePrivadaString = CPRA.getPrivate('hex');
+const chavePublicaString = CPRA.getPublic('hex');
+
+console.log("---------------------------------CHAVE CONVERTIDA EM HEXADECIMAL----------------------------------------------------")
+console.log(chavePrivadaString)
+console.log(chavePublicaString)
+
+const chavePrivadaA = ec_1.keyFromPrivate(chavePrivadaString, 'hex');
+const chavePublicaA = ec_1.keyFromPublic(chavePublicaString, 'hex');
+
+console.log("--------------------------------CHAVE CONVERTIDA DE VOLTA EM OBJETO-----------------------------------------------------")
+
+console.log(chavePrivadaA)
+console.log(chavePublicaA)
+
+console.log("-------------------------------------------------------------------------------------")
 
 // ----------------------------------------------------------------------------------------------------
 // Pessoa B envia sua chave pública para Pessoa A
@@ -81,3 +98,16 @@ const mensagemDecifradaB = decipherB.update(ciphertextB, 'hex', 'utf-8') + decip
 console.log('\nPessoa B decifrou a mensagem de Pessoa A:', mensagemDecifradaB);
 
 // ... Repetir o processo para a resposta de Pessoa B ...
+
+//----------------------------------------------------------------------------------------------------
+
+const chavePrivadaC = ec_3.genKeyPair();
+const chavePublicaC = chavePrivadaC.getPublic('hex');
+
+const chaveCompartilhadaC = chavePrivadaC.derive(ec_3.keyFromPublic(chavePublicaA, 'hex').getPublic()).toArray();
+
+const ivC = mensagemCriptografadaA.slice(0, 16);
+const ciphertextC = mensagemCriptografadaA.slice(16);
+const decipherC = crypto.createDecipheriv('aes-256-ctr', Buffer.from(chaveCompartilhadaC), ivC);
+const mensagemDecifradaC = decipherC.update(ciphertextC, 'hex', 'utf-8') + decipherC.final('utf-8');
+console.log('\nPessoa C tentou decifrou a mensagem que a Pessoa A mandou pra Pessoa B:', mensagemDecifradaC);
