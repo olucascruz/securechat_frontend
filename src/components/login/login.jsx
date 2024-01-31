@@ -1,15 +1,18 @@
 import { loginUser } from "../../service/user_service"
-import {generateKeyPair} from "../../service/keys_service";
 import { useEffect } from "react";
-import {decryptMessage, encryptMessage} from "../../service/cryptography_service.js"
 import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
+import crypto from 'crypto';
+import EC from 'elliptic';
+
 
 
 function Login({setters}) {
-    const { setState, setUsername, setKeys, setSocket } = setters;
+    const { setState, setUserdata, setKeys, setSocket } = setters;
     let keys = {"privateKey":"",
-                "publicKey":""}
+                "publicKey":"",
+                "keyPair":"",
+                "ec":""}
     const navigate = useNavigate()
 
     useEffect(()=>{
@@ -36,25 +39,45 @@ function Login({setters}) {
         event.preventDefault();
         
         const usernameInput = document.getElementById("iusername");
+        const passwordInput = document.getElementById("ipassword");
+
         const username = usernameInput.value;
-        if(!keys.privateKey){
-          const newKeys = await generateKeyPair()
-          keys.publicKey = newKeys.publicKey
-          keys.privateKey = newKeys.privateKey
-          localStorage.setItem("privateKey", keys.privateKey)
-          localStorage.setItem("publicKey", keys.publicKey)
-        }
+        const password = passwordInput.value;
+
+
+        
+        const ellipicCurve = new EC.ec('secp256k1');
+        const keyPair = ellipicCurve.genKeyPair();
+        const publicKey = keyPair.getPublic('hex');
+        keys.publicKey = keyPair.getPublic('hex')
+        keys.privateKey = keyPair.getPrivate('hex')
+        keys.keyPair = keyPair
+        keys.ec = ellipicCurve
+
+
+        localStorage.setItem("privateKey", keys.privateKey)
+        localStorage.setItem("publicKey", keys.publicKey)
+        localStorage.setItem("keyPair", keyPair)
 
         // Registre o usuário
-        loginUser(username, password, keys.publicKey); // Supondo que registerUser 
-        // Atualize o estado
-        setKeys(keys);
-        setUsername(username);
-        setState("list_users");
-        // connectWithSocket()
-        navigate('users', { replace: true })
-      };
+        const response = await loginUser(username, password, publicKey);
+        console.log(response)
 
+        if(response.status == 200){
+          const userId = response.data["id"]
+
+          // Atualize o estado
+          setKeys(keys);
+          const userdata = {
+            "username":username,
+            "userId":userId
+          }
+          setUserdata(userdata);
+          setState("list_users");
+          connectWithSocket()
+          navigate('users', { replace: true })
+        };
+      }
       
     
       return (
