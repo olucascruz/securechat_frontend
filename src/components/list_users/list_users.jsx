@@ -16,7 +16,6 @@ function ListUsers({setters}) {
             let result = await getUsers()
             console.log("result:",result)
             const usersArray = Object.keys(result).map(key => ({
-                username: key,
                 ...result[key]
             }));
             setUsers(usersArray);
@@ -53,7 +52,7 @@ function ListUsers({setters}) {
                 {users.map((user, index) => (
                     <li key={index}>
                         <span>{user.username}:{user.is_online.toString()}</span>
-                        <button data-value={user.username} className="btStartChat" onClick={handleClick(user)}>
+                        <button data-value={user.id} className="btStartChat" onClick={handleClick(user)}>
                             start chat
                         </button>
                     </li>

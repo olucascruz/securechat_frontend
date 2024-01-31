@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import EC from 'elliptic';
 
 function Register({setters}) {
-    const { setState, setUsername, setKeys} = setters;
-    let keys = {"privateKey":"",
-                "publicKey":""}
+    const { setState } = setters;
+
     const navigate = useNavigate()
 
     const handleSubmit = async (event) => {

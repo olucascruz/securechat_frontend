@@ -27,6 +27,7 @@ export const registerUser = async (username, password, publicKey) =>{
   .then(response => {
     // Manipulando os dados da resposta
     console.log('Dados da resposta:', response.data);
+    return response.status
   })
   .catch(error => {
     // Lidando com erros
@@ -43,15 +44,13 @@ export const loginUser = async (username, password, publicKey) =>{
   };
 
   const registerEndpoint = 'http://127.0.0.1:5000/login';
-  axios.post(registerEndpoint, data)
-.then(response => {
-  // Manipulando os dados da resposta
-  console.log('Dados da resposta:', response.data);
-})
-.catch(error => {
-  // Lidando com erros
-  console.error('Erro na requisição:', error);
-});
+  try{
+  const response = await axios.post(registerEndpoint, data)
+  return response
 
-}
+  } catch(error){
+    // Lidando com erros
+    console.error('Erro na requisição:', error);
+  };
+  }
 
