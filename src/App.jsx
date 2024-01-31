@@ -6,15 +6,9 @@ import Register from './components/register/register'
 import axios from 'axios'
 import './App.css'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { UserProvider } from './utils/userContext'
 
-
-function App() {
-  const [state, setState] = useState("login")
-  const [userdata, setUserdata] = useState("")
-  const [receiverData, setReceiverData] = useState({})
-  const [keys, setKeys] = useState({})
-  const [socket, setSocket] = useState(false);
-  
+function App() {  
   useEffect(()=>{
     return async () => {
       // resoponse_logout = await axios.post("http://127.0.0.1:5000/logout", {"username":username})
@@ -24,13 +18,16 @@ function App() {
   return (
     <>
       {/* {switchComponent()} */}
+      <UserProvider>
       <Routes>
         
-        <Route path="/users" element={<ListUsers setters={{ setState, setReceiverData, userdata, socket }} />} />
-        <Route path="/chat" element={<Chat getters={{ userdata, setReceiverData, receiverData, keys, socket }} />} />
-        <Route path="/register" element={<Register setters={{ setState}} />} />
-        <Route exact path="/" element={<Login setters={{ setState, setUserdata, setKeys, setSocket}} />} />
+        <Route path="/users" element={<ListUsers/>} />
+        <Route path="/chat" element={<Chat/>} />
+        <Route path="/register" element={<Register/>}/>
+        <Route exact path="/" element={<Login/>} />
+
       </Routes>
+      </UserProvider>
     </>
   )
 }
