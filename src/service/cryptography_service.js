@@ -2,11 +2,11 @@
 import crypto from 'crypto';
 import EC from 'elliptic';
 
-// Create elliptic instances
-const ec = new EC.ec('secp256k1');
 
 // Function to generate key and extract public key
 const generateKeyAndExtractPublic = () => {
+  const ec = new EC.ec('secp256k1');
+  
   const key = ec.genKeyPair();
   return {
     privateKey: key.getPrivate('hex'),
@@ -16,6 +16,8 @@ const generateKeyAndExtractPublic = () => {
 
 // Function to share key and encrypt message
 const shareKeyAndEncrypt = (privateKey, destinationPublicKey, message) => {
+  const ec = new EC.ec('secp256k1');
+
   const privateKeyObj = ec.keyFromPrivate(privateKey, 'hex');
   const sharedKey = privateKeyObj.derive(ec.keyFromPublic(destinationPublicKey, 'hex').getPublic()).toArray();
 
@@ -28,6 +30,8 @@ const shareKeyAndEncrypt = (privateKey, destinationPublicKey, message) => {
 
 // Function to decrypt message
 const decryptMessage = (privateKey, originPublicKey, encryptedMessage) => {
+  const ec = new EC.ec('secp256k1');
+
   const privateKeyObj = ec.keyFromPrivate(privateKey, 'hex');
   const sharedKey = privateKeyObj.derive(ec.keyFromPublic(originPublicKey, 'hex').getPublic()).toArray();
 
