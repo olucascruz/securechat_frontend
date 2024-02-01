@@ -40,18 +40,16 @@ function ListUsers() {
             }));
             setUsers(usersArray);
             console.log("users:", usersResult)
-
-            let groupResult = await getGroups()
-            console.log("result:", groupResult)
-            const groupArray = Object.keys(groupResult).map(key => ({
-                ...groupResult[key]
-            }));
-            setGroups(groupArray);
-            
+            if(dataId){
+                const  groupResult = await getGroups(dataId)
+                console.log("group:", groupResult)
+                const groupArray = Object.keys(groupResult).map(key => ({
+                    ...groupResult[key]
+                }));
+                setGroups(groupArray);
+            } 
         }
-        
         fetchData()
-        
     },[])
 
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO

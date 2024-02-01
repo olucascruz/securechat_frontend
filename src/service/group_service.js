@@ -1,10 +1,11 @@
 import axios from "axios";
 
-export const getGroups = async () =>{
+export const getGroups = async (user_id) =>{
     const usersEndpoint = 'http://127.0.0.1:5000/get_group';
 
     try {
-        const response = await axios.get(usersEndpoint);
+        const data = {"id":user_id}
+        const response = await axios.post(usersEndpoint, data);
         // Retornando os dados da resposta
         return response.data;
     } catch (error) {
