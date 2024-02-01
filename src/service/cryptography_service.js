@@ -5,14 +5,14 @@ import EC from 'elliptic';
 function generateRandomHexBytes(length) {
   const randomBytes = [];
   for (let i = 0; i < length; i++) {
-    // Gerar um número aleatório entre 0 e 255 (8 bits)
+    // Generate a random number between 0 and 255 (8 bits)
     const randomByte = Math.floor(Math.random() * 256);
-    // Converter o número para uma string hexadecimal
+    // Convert the number to a hexadecimal string
     const hexByte = randomByte.toString(16).padStart(2, '0');
-    // Adicionar ao array de bytes aleatórios
+    // Add to the array of random bytes
     randomBytes.push(hexByte);
   }
-  // Juntar os bytes em uma única string
+  // Join the bytes into a single string
   const hexString = randomBytes.join('');
   return hexString;
 }
