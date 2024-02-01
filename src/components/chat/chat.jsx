@@ -2,7 +2,7 @@ import {useEffect, useState } from 'react';
 import { useUserContext } from '../../utils/userContext';
 import EC from 'elliptic';
 import io from 'socket.io-client';
-
+import {shareKeyAndEncrypt, decryptMessage} from "../../service/cryptography_service" 
 
 function Chat() {
     const {userdata, setUserdata, receiverData, setReceiverData, keys, setKeys, socket, setSocket} = useUserContext()
@@ -55,7 +55,8 @@ function Chat() {
     useEffect(()=>{
       const handleMessage = (data) => {
         console.log("message",data);
-        setMessages(prevMessages => [...prevMessages, data]);
+        const newMessage = decryptMessage(userdata.privateKey,receiverData.publicKey, data.message)
+        setMessages(prevMessages => [...prevMessages, newMessage]);
       };
       if(socket) socket.on(`message-${userdata["id"]}`, handleMessage);
     },[messages, socket])
@@ -76,11 +77,14 @@ function Chat() {
           // Emite a mensagem via socket para o destinatário
           console.log("receiver", receiverData);
           if(!socket) return
+          const messageEncrypted = shareKeyAndEncrypt(keys.privteKey, receiverData.publicKey, inputValue)
           socket.emit('message', {
               username: userdata["username"],
-              message: inputValue,
+              message: messageEncrypted,
               receiver: receiverData.id
           });
+
+      setInputValue("")
       } catch (error) {
           console.error("Erro ao enviar mensagem:", error);
           // Adicione aqui o tratamento adequado para o erro, se necessário

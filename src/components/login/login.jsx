@@ -2,8 +2,7 @@ import { loginUser } from "../../service/user_service"
 import { useEffect } from "react";
 import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
-import crypto from 'crypto';
-import EC from 'elliptic';
+import {generateKeyAndExtractPublic} from "../../service/cryptography_service" 
 import { useUserContext } from "../../utils/userContext";
 
 
@@ -46,14 +45,10 @@ function Login() {
 
 
         
-        const ellipicCurve = new EC.ec('secp256k1');
-        const keyPair = ellipicCurve.genKeyPair();
-        const publicKey = keyPair.getPublic('hex');
-        keys.publicKey = keyPair.getPublic('hex')
-        keys.privateKey = keyPair.getPrivate('hex')
-        keys.keyPair = keyPair
-        keys.ec = ellipicCurve
-
+        
+        const keyPair = generateKeyAndExtractPublic()
+        keys.publicKey = keyPair.publicKey
+        keys.privateKey = keyPair.privateKey
         
 
         
