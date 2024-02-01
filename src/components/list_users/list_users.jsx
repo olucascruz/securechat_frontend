@@ -59,12 +59,12 @@ function ListUsers() {
     // CÓDIGO É EXECUTADO QUANDO O USUÁRIO SELECIONA UM RECEPTOR
     const handleClick = (param) => (event) => {
         // Guarda os dados do receptor
-        console.log(param)
+        console.log("handleClick receiver data:  ",param)
         setReceiverData(param);
         console.log(receiverData)
         sessionStorage.setItem("receiverId",param.id)
         sessionStorage.setItem("receiverUsername",param.username)
-        sessionStorage.setItem("receiverPublicKey",param.publicKey)
+        sessionStorage.setItem("receiverPublicKey",param.public_key)
         sessionStorage.setItem("receiverIsOnline",param.is_online.toString())
 
         setState("chat");

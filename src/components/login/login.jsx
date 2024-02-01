@@ -47,18 +47,19 @@ function Login() {
         
         
         const keyPair = generateKeyAndExtractPublic()
+        console.log(keyPair)
         keys.publicKey = keyPair.publicKey
         keys.privateKey = keyPair.privateKey
         
 
         
         // Registre o usuário
-        const response = await loginUser(username, password, publicKey);
+        const response = await loginUser(username, password, keyPair.publicKey);
         console.log(response)
 
         if(response.status == 200){
           const userId = response.data["id"]
-          sessionStorage.setItem("privateKey", keys.privateKey);
+          sessionStorage.setItem("privateKey", keyPair.privateKey);
           sessionStorage.setItem("publicKey", keys.publicKey);
           sessionStorage.setItem("username", username);
           sessionStorage.setItem("userId", userId);

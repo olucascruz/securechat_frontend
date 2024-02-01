@@ -31,7 +31,7 @@ function Chat() {
       const ec_1 = new EC.ec('secp256k1');
       const dataPrivateKey = sessionStorage.getItem("privateKey")
       setKeyPair(ec_1.keyFromPrivate(dataPrivateKey, 'hex'));
-      const new_keys = {"privteKey":dataPrivateKey}
+      const new_keys = {"privateKey":dataPrivateKey}
       setKeys(new_keys)
 
 
@@ -53,10 +53,14 @@ function Chat() {
     },[])
 
     useEffect(()=>{
-      const handleMessage = (data) => {
+      const handleMessage = async (data) => {
         console.log("message",data);
-        const newMessage = decryptMessage(userdata.privateKey,receiverData.publicKey, data.message)
-        setMessages(prevMessages => [...prevMessages, newMessage]);
+        console.log("message",data);
+        const newMessage = await decryptMessage(keys.privateKey,receiverData.publicKey, data.message)
+        console.log("newMessage:",newMessage)
+        const new_data = {"username":data.username,
+                    "message":newMessage}
+        setMessages(prevMessages => [...prevMessages, new_data]);
       };
       if(socket) socket.on(`message-${userdata["id"]}`, handleMessage);
     },[messages, socket])
@@ -64,24 +68,27 @@ function Chat() {
     const sendMessage = async (event) => {
       try {
           event.preventDefault();
-  
+          console.log("receiverPublicKey",sessionStorage.getItem("receiverPublicKey"))
           // Constrói o objeto da mensagem do usuário atual
           const userMessage = {
               username: userdata["username"],
               message: inputValue
           };
-  
+          
           // Atualiza o estado com a nova mensagem
           setMessages([...messages, userMessage]);
   
           // Emite a mensagem via socket para o destinatário
           console.log("receiver", receiverData);
           if(!socket) return
-          const messageEncrypted = shareKeyAndEncrypt(keys.privteKey, receiverData.publicKey, inputValue)
+          console.log("before encrypted")
+          const messageEncrypted = await shareKeyAndEncrypt(keys.privateKey, receiverData.publicKey, inputValue)
+          console.log("encrypted")
+          console.log("messageEncrypted:", messageEncrypted)
           socket.emit('message', {
               username: userdata["username"],
               message: messageEncrypted,
-              receiver: receiverData.id
+              receiver: receiverData.id 
           });
 
       setInputValue("")
