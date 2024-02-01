@@ -29,7 +29,7 @@ function CreateGroup() {
         const dataName = sessionStorage.getItem("username")
         const dataId = sessionStorage.getItem("userId")
         const recoverData = {"username":dataName, "userId":dataId}
-        setSelectedUsers([dataId])
+        setSelectedUsers([...selectedUsers, dataId])
         setUserdata(recoverData)
         // if(!username) navigate("/")
         const fetchData = async () =>{
@@ -80,9 +80,8 @@ function CreateGroup() {
         
         if(!nameGroup) return
         if(selectedUsers.length < 2) return
+        console.log("selected users")
         createGroups(nameGroup, selectedUsers)
-           
-
     }
     return (
       <>

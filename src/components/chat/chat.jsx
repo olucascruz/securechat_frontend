@@ -54,21 +54,28 @@ function Chat() {
 
     useEffect(()=>{
       const handleMessage = async (data) => {
-        console.log("message",data);
-        console.log("message",data);
         const newMessage = await decryptMessage(keys.privateKey,receiverData.publicKey, data.message)
-        console.log("newMessage:",newMessage)
         const new_data = {"username":data.username,
                     "message":newMessage}
         setMessages(prevMessages => [...prevMessages, new_data]);
       };
       if(socket) socket.on(`message-${userdata["id"]}`, handleMessage);
+      // if(socket) socket.on(`dbChanged-${receiverData["id"]}`, changeReceiver);
+      
     },[messages, socket])
     
+    const changeReceiver = (param) =>{
+      console.log(param)
+      // setReceiverData(param)
+      
+      // sessionStorage.setItem("receiverId",param.id)
+      // sessionStorage.setItem("receiverUsername",param.username)
+      // sessionStorage.setItem("receiverPublicKey",param.public_key)
+      // sessionStorage.setItem("receiverIsOnline",param.is_online.toString())
+    }
     const sendMessage = async (event) => {
       try {
           event.preventDefault();
-          console.log("receiverPublicKey",sessionStorage.getItem("receiverPublicKey"))
           // Constrói o objeto da mensagem do usuário atual
           const userMessage = {
               username: userdata["username"],
@@ -79,12 +86,10 @@ function Chat() {
           setMessages([...messages, userMessage]);
   
           // Emite a mensagem via socket para o destinatário
-          console.log("receiver", receiverData);
           if(!socket) return
           console.log("before encrypted")
           const messageEncrypted = await shareKeyAndEncrypt(keys.privateKey, receiverData.publicKey, inputValue)
-          console.log("encrypted")
-          console.log("messageEncrypted:", messageEncrypted)
+         
           socket.emit('message', {
               username: userdata["username"],
               message: messageEncrypted,
