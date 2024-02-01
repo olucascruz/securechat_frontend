@@ -3,10 +3,13 @@ import { getUsers } from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../../utils/userContext"
 import io from 'socket.io-client';
+import { getGroups } from "../../service/group_service.js";
 
 function ListUsers() {
     const {setState, setReceiverData, receiverData, userdata, setUserdata, socket, setSocket} = useUserContext()
     const [users, setUsers] = useState([])
+    const [groups, setGroups] = useState([])
+
     const navigate = useNavigate()
     const connectWithSocket = () =>{
         let connection = null
@@ -18,6 +21,7 @@ function ListUsers() {
           console.log(error)
         }
       }
+
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
     useEffect(()=>{
         connectWithSocket()
@@ -29,13 +33,21 @@ function ListUsers() {
         setUserdata(recoverData)
         // if(!username) navigate("/")
         const fetchData = async () =>{
-            let result = await getUsers()
-            console.log("result:",result)
-            const usersArray = Object.keys(result).map(key => ({
-                ...result[key]
+            let usersResult = await getUsers()
+            console.log("result:", usersResult)
+            const usersArray = Object.keys(usersResult).map(key => ({
+                ...usersResult[key]
             }));
             setUsers(usersArray);
-            console.log("users:", users)
+            console.log("users:", usersResult)
+
+            let groupResult = await getGroups()
+            console.log("result:", groupResult)
+            const groupArray = Object.keys(groupResult).map(key => ({
+                ...groupResult[key]
+            }));
+            setGroups(groupArray);
+            
         }
         
         fetchData()
@@ -70,23 +82,40 @@ function ListUsers() {
         setState("chat");
         navigate("/chat")
     };
-    
+
+    const handleClickCreateGroup = (param) => (event) => {
+        setState("add_group");
+        navigate("/add_group")
+    }
     
     return (
       <>
-      <h3>Bem vinde {userdata["username"]}</h3>
+      <h3> Bem vinde {userdata["username"]}</h3>
         <div id="viewUsers">
             <p>Users</p>
             <ul id="users">
                 {users.map((user, index) => (
-                    <li key={index}>
-                        <span>{user.username}:{user.is_online.toString()}</span>
-                        <button data-value={user.id} className="btStartChat" onClick={handleClick(user)}>
-                            start chat
-                        </button>
-                    </li>
+                <li key={index}>
+                    <span>{user.username}:{user.is_online.toString()}</span>
+                    <button data-value={user.id} className="btStartChat" onClick={handleClick(user)}>
+                        start chat
+                    </button>
+                </li>
                 ))}
             </ul>
+            <hr />
+            <p>Groups</p><button onClick={handleClickCreateGroup()}>Create group</button>
+            <ul id="groups">
+                {groups.map((group, index) => (
+                <li key={index}>
+                    <span>{group.name}</span>
+                    <button data-value={group.id} className="groupButton">
+                        enter group
+                    </button>
+                </li>
+                ))}
+            </ul>
+
         </div>
       </>
     )
