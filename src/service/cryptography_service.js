@@ -2,6 +2,20 @@
 import crypto from 'crypto';
 import EC from 'elliptic';
 
+function generateRandomHexBytes(length) {
+  const randomBytes = [];
+  for (let i = 0; i < length; i++) {
+    // Generate a random number between 0 and 255 (8 bits)
+    const randomByte = Math.floor(Math.random() * 256);
+    // Convert the number to a hexadecimal string
+    const hexByte = randomByte.toString(16).padStart(2, '0');
+    // Add to the array of random bytes
+    randomBytes.push(hexByte);
+  }
+  // Join the bytes into a single string
+  const hexString = randomBytes.join('');
+  return hexString;
+}
 
 // Function to generate key and extract public key
 const generateKeyAndExtractPublic = () => {
@@ -21,9 +35,14 @@ const shareKeyAndEncrypt = (privateKey, destinationPublicKey, message) => {
   const privateKeyObj = ec.keyFromPrivate(privateKey, 'hex');
   const sharedKey = privateKeyObj.derive(ec.keyFromPublic(destinationPublicKey, 'hex').getPublic()).toArray();
 
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv('aes-256-ctr', Buffer.from(sharedKey), iv);
-  const encryptedMessage = Buffer.concat([iv, cipher.update(message, 'utf-8'), cipher.final()]);
+  const ivData = generateRandomHexBytes(16)
+
+  // Converter de volta para Buffer
+  const ivBufferRestored = Buffer.from(ivData, 'hex');
+
+  console.log('IV lido do iv.json e convertido de volta para Buffer:', ivBufferRestored);
+  const cipher = crypto.createCipheriv('aes-256-ctr', Buffer.from(sharedKey), ivBufferRestored);
+  const encryptedMessage = Buffer.concat([ivBufferRestored, cipher.update(message, 'utf-8'), cipher.final()]);
 
   return encryptedMessage.toString('hex');
 };
