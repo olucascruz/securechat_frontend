@@ -109,8 +109,6 @@ export const decryptMessage = async (privateKey, originPublicKey, encryptedMessa
     ['encrypt', 'decrypt'] // operações permitidas
   );
   
-  console.log("chegou aqui")
-
   let iv = null
   let ciphertext = null
   

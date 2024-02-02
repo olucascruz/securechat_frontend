@@ -55,8 +55,7 @@ function Chat() {
     useEffect(()=>{
       const handleMessage = async (data) => {
         console.log("message",data);
-        console.log("message",data);
-        const newMessage = await decryptMessage(keys.privateKey,receiverData.publicKey, data.message)
+        const newMessage = await decryptMessage(keys.privateKey, receiverData.publicKey, data.message)
         console.log("newMessage:",newMessage)
         const new_data = {"username":data.username,
                     "message":newMessage}

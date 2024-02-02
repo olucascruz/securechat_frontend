@@ -1,9 +1,10 @@
 import { registerUser} from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom";
 import EC from 'elliptic';
+import { useUserContext } from "../../utils/userContext.jsx";
 
 function Register({setters}) {
-    const { setState } = setters;
+    const { setState, setUserdata, setKeys, setSocket } = useUserContext()
 
     const navigate = useNavigate()
 
