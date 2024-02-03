@@ -1,6 +1,6 @@
 /**
  * @jest-environment jsdom
- */
+*/
 
 import { JSDOM } from 'jsdom';
 const dom = new JSDOM();
@@ -29,15 +29,17 @@ describe("crypto", () =>{
     const receiverId = "4bced20b-4728-4632-8766-6c2b6e406bc2"
     
     const keyPairReceiver = generateKeyAndExtractPublic()
-    
+    console.log("keysGenerated")
     const msg = "message test jest"
     const msgEncrypted = await  shareKeyAndEncrypt(keyPair.privateKey, keyPairReceiver.publicKey, msg)
+    console.log("messageEncrypted")
     
     ioSender.emit('message', {
         username: senderUsername,
         message: msgEncrypted,
         receiver: receiverId
     });
+    console.log("messageEmitted")
 
     const receivedMessagePromise = new Promise( async (resolve) => {
         const ioReceiver = io("http://127.0.0.1:5000")
@@ -45,18 +47,19 @@ describe("crypto", () =>{
         const receiverUsername = "olucas2"
         const receiverPassword = "asenha2"
         const responseReceiverLogin = await loginUser(receiverUsername, receiverPassword, keyPairReceiver.publicKey);
-
+        console.log("receiver do login")
         const handleMessage = async (data) => {
             const newMessage = await decryptMessage(keyPairReceiver.privateKey, keyPair.publicKey, data.message)
             const newData = {
                 "username": data.username,
                 "message": newMessage
             }
+            console.log("SenderMessege:",msg)
             console.log("messageDecrypted: ", newData)
             resolve(newData);
         }
 
-        ioReceiver.on(`message-${receiverId}`, handleMessage);
+        ioReceiver.on(`message-${receiverId}`, handleMessage)
     });
 
     ioSender.emit('message', {
@@ -72,5 +75,5 @@ describe("crypto", () =>{
         message: msg,
     });
 
-    })
+    }, 20000)
 })

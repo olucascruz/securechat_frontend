@@ -4,4 +4,6 @@ import crypto from "@trust/webcrypto";
 global.crypto.subtle = crypto.subtle;
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-// global.ArrayBuffer = ArrayBuffer;
+// @ts-ignore
+window.setImmediate = window.setTimeout
+
