@@ -59,6 +59,7 @@ function Chat() {
                     "message":newMessage}
         setMessages(prevMessages => [...prevMessages, new_data]);
       };
+      
       if(socket) socket.on(`message-${userdata["id"]}`, handleMessage);
       // if(socket) socket.on(`dbChanged-${receiverData["id"]}`, changeReceiver);
       

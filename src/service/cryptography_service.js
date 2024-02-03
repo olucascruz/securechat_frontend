@@ -1,6 +1,7 @@
 // Imports
 import crypto from 'crypto';
 import EC from 'elliptic';
+import { TextEncoder, TextDecoder } from 'util';
 
 function generateRandomHexBytes(length) {
   const randomBytes = [];
@@ -89,11 +90,20 @@ function hexToArrayBuffer(hexString) {
 }
 
 // Function to decrypt message
-export const decryptMessage = async (privateKey, originPublicKey, encryptedMessage) => {
+export const decryptMessage = async (privateKey, 
+                                    originPublicKey, 
+                                    encryptedMessage) => {
+  
   const ec = new EC.ec('secp256k1');
   console.log(privateKey)
   console.log(originPublicKey)
   console.log(encryptedMessage)
+  
+  if(!privateKey || !originPublicKey || !encryptedMessage) {
+    console.error("Params not expected")
+    return
+  }
+
 
   encryptedMessage = hexToArrayBuffer(encryptedMessage)
 
