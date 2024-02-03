@@ -6,31 +6,19 @@ import io from 'socket.io-client';
 import { createGroups } from "../../service/group_service.js";
 
 function CreateGroup() {
-    const {setState, socket, setSocket, userdata, setUserdata} = useUserContext()
+    const {setState, socket, userdata} = useUserContext()
     const [users, setUsers] = useState([])
     const [selectedUsers, setSelectedUsers] = useState([]);
     
     const navigate = useNavigate()
-    const connectWithSocket = () =>{
-        let connection = null
-        try{
-          connection = io('http://127.0.0.1:5000')
-          setSocket(connection)
-          
-        }catch(error){
-          console.log(error)
-        }
-      }
+    
 
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
     useEffect(()=>{
-        connectWithSocket()
         // Obtém os dados da sessionStorage
         const dataName = sessionStorage.getItem("username")
         const dataId = sessionStorage.getItem("userId")
-        const recoverData = {"username":dataName, "userId":dataId}
-        setSelectedUsers([...selectedUsers, dataId])
-        setUserdata(recoverData)
+        
         // if(!username) navigate("/")
         const fetchData = async () =>{
             let usersResult = await getUsers()

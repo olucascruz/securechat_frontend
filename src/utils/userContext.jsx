@@ -1,17 +1,49 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { recoverUserData, recoverKeys, recoverReceiverData, recoverToken  } from './handleSession'
+import io from 'socket.io-client';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [state, setState] = useState('login');
-  const [userdata, setUserdata] = useState('');
-  const [receiverData, setReceiverData] = useState({});
-  const [keys, setKeys] = useState({});
-  const [socket, setSocket] = useState(false);
+  const [token, setToken] = useState(null)
+  const [userData, setUserData] = useState(null);
+  const [receiverData, setReceiverData] = useState(null);
+  const [keyPair, setKeyPair] = useState(null);
+  const [socket, setSocket] = useState(null);
   
+  useEffect(()=>{
+    try{
+      const receiverRecoved = recoverReceiverData()
+      if(!receiverData)setReceiverData(receiverRecoved)
+      const userDataRecoved = recoverUserData()
+      if(!userData)setUserData(userDataRecoved)
 
+      const keyPairRecoved = recoverKeys()
+      const tokenUser = recoverToken()
+
+      if(!token)setToken(tokenUser)
+      if(!keyPair)setKeyPair(keyPairRecoved)
+
+      if(token && !socket){
+        try{
+          let connection = null
+          connection = io('http://127.0.0.1:5000')
+          setSocket(connection)
+          console.log("connected")
+        }catch(error){
+            console.log(error)
+        }
+      }
+    }catch(error){
+      console.log(error)
+    }
+
+    
+  
+  },[token, userData, keyPair, receiverData, socket])
+  
   return (
-    <UserContext.Provider value={{ state, setState, userdata, setUserdata, receiverData, setReceiverData, keys, setKeys, socket, setSocket }}>
+    <UserContext.Provider value={{ token, setToken, userData, setUserData, receiverData, setReceiverData, keyPair, setKeyPair, socket, setSocket }}>
       {children}
     </UserContext.Provider>
   );

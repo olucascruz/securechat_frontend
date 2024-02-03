@@ -4,35 +4,12 @@ import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 import {generateKeyAndExtractPublic} from "../../service/cryptography_service" 
 import { useUserContext } from "../../utils/userContext";
+import { defineToken, defineUserData, defineUserKeyPair } from "../../utils/handleSession";
 
 
 function Login() {
-    const { setState, setUserdata, setKeys, setSocket } = useUserContext()
-    let keys = {"privateKey":"",
-                "publicKey":"",
-                "keyPair":"",
-                "ec":""}
+    const {setUserData, setToken} = useUserContext()
     const navigate = useNavigate()
-
-    useEffect(()=>{
-
-      let privateKey = localStorage.getItem("privateKey")
-      let publicKey = localStorage.getItem("publicKey")
-      keys.privateKey = privateKey
-      keys.publicKey = publicKey
-    
-    },[])
-
-    const connectWithSocket = () =>{
-      let connection = null
-      try{
-        connection = io('http://127.0.0.1:5000')
-        setSocket(connection)
-        
-      }catch(error){
-        console.log(error)
-      }
-    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -41,39 +18,30 @@ function Login() {
         const passwordInput = document.getElementById("ipassword");
 
         const username = usernameInput.value;
-        const password = passwordInput.value;
-
-
-        
-        
+        const password = passwordInput.value;     
         const keyPair = generateKeyAndExtractPublic()
         console.log(keyPair)
-        keys.publicKey = keyPair.publicKey
-        keys.privateKey = keyPair.privateKey
-        
-
-        
+          
         // Registre o usuário
         const response = await loginUser(username, password, keyPair.publicKey);
         console.log(response)
 
         if(response.status == 200){
           const userId = response.data["id"]
-          sessionStorage.setItem("privateKey", keyPair.privateKey);
-          sessionStorage.setItem("publicKey", keys.publicKey);
-          sessionStorage.setItem("username", username);
-          sessionStorage.setItem("userId", userId);
+          const token = response.data["token"]
 
-
-          // Atualize o estado
-          setKeys(keys);
+          defineUserKeyPair(keyPair.privateKey,
+                         keyPair.publicKey)
+          
+          
           const userdata = {
             "username":username,
-            "userId":userId
+            "id":userId
           }
-          setUserdata(userdata);
-          setState("list_users");
-          connectWithSocket()
+          setUserData(userdata);
+          setToken(token)
+          defineUserData(username, userId)
+          defineToken(token)
           navigate('users', { replace: true })
         };
       }
@@ -82,15 +50,24 @@ function Login() {
       return (
         <>
         <h3>Login</h3>
-          <form id="formName" onSubmit={handleSubmit}>
+          <form 
+            id="formName" 
+            onSubmit={handleSubmit}>
             <p>Username</p>
-            <input placeholder="username" required id="iusername" type="text" />
+            <input 
+              placeholder="username"
+              required id="iusername" 
+              type="text" />
             <p>Password</p>
-            <input placeholder="password" required id="ipassword" type="text" />
+            <input 
+              placeholder="password" 
+              required 
+              id="ipassword" 
+              type="text" />
             <br />
-            <button type="submit">send</button>
+            <button type="submit"> send </button>
           </form>
-          <a href="/register">register</a>
+          <a href="/register"> register </a>
         </>
       );
     }

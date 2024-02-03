@@ -18,7 +18,6 @@ function App() {
   
   return (
     <>
-      {/* {switchComponent()} */}
       <UserProvider>
       <Routes>
         <Route path="/add_group" element={<CreateGroup/>} />

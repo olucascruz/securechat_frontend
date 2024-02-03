@@ -1,7 +1,7 @@
 // Imports
 import crypto from 'crypto';
 import EC from 'elliptic';
-import { TextEncoder, TextDecoder } from 'util';
+// import { TextEncoder, TextDecoder } from 'util';
 
 function generateRandomHexBytes(length) {
   const randomBytes = [];
@@ -95,12 +95,13 @@ export const decryptMessage = async (privateKey,
                                     encryptedMessage) => {
   
   const ec = new EC.ec('secp256k1');
-  console.log(privateKey)
-  console.log(originPublicKey)
-  console.log(encryptedMessage)
   
-  if(!privateKey || !originPublicKey || !encryptedMessage) {
+  if(!privateKey  || !originPublicKey || !encryptedMessage) {
     console.error("Params not expected")
+    if(!privateKey)console.error("not found privateKey: ", privateKey)
+    if(!originPublicKey)console.error("not found publicKey: ", originPublicKey)
+    if(!encryptedMessage)console.error("not found: encryptedMessage:", encryptedMessage)
+
     return
   }
 
