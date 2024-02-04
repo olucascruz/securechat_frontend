@@ -22,15 +22,9 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const initialState = {
-    id: '',
-    username: '',
-    publicKey: '',
-    isOnline: false,
-  };
   
-  const [receiverData, updateReceiverData] = useReducer(receiverReducer, initialState);
-
+  const recovedReceiverData = recoverReceiverData()
+  const [receiverData, updateReceiverData] = useReducer(receiverReducer, recovedReceiverData);
   useEffect(()=>{
     try{
       

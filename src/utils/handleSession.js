@@ -18,13 +18,14 @@ export const recoverReceiverData = () =>{
     const receiverIsOnline = sessionStorage.getItem(receiverIsOnlineString);
 
     const receiverData = {
-        id: receiverId, // Definir um valor padrão vazio se o item não estiver presente
-        username: receiverUsername,
-        publicKey: receiverPublicKey,
-        isOnline: receiverIsOnline, 
+        id: receiverId || '', // Definir um valor padrão vazio se o item não estiver presente
+        username: receiverUsername || '',
+        publicKey: receiverPublicKey || '',
+        isOnline: receiverIsOnline || false, 
+        
     };
 
-    return receiverData ? receiverData : null
+    return receiverData 
 }
 
 
