@@ -8,7 +8,7 @@ import { defineToken, defineUserData, defineUserKeyPair } from "../../utils/hand
 
 
 function Login() {
-    const {setUserData, setToken} = useUserContext()
+    const {setUserData, setToken, setKeyPair} = useUserContext()
     const navigate = useNavigate()
 
     const handleSubmit = async (event) => {
@@ -42,6 +42,11 @@ function Login() {
           setToken(token)
           defineUserData(username, userId)
           defineToken(token)
+          const userKeyPair ={
+            "publicKey": keyPair.publicKey,
+            "privateKey":keyPair.privateKey
+          }
+          setKeyPair(userKeyPair)
           navigate('users', { replace: true })
         };
       }

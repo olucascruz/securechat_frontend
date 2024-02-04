@@ -31,10 +31,14 @@ otherPublicKey) =>{
     console.log("receiverPubblic-receiveMsgSocket",otherPublicKey)
 
     const handleMessage = async (data) => {
-        const newMessage = await decryptMessage(userPrivateKey,otherPublicKey, data.message)
-        const newData = {"username":data.username || "error",
-                    "message":newMessage || "error"}
-        return newData
+        try{
+            const newMessage = await decryptMessage(userPrivateKey,otherPublicKey, data.message)
+            const newData = {"username":data.username || "error",
+                        "message":newMessage || "error"}
+            return newData
+        }catch(error){
+            console.log("handleMessageError:", error)
+        }
       };
       
     if(socket){ 
@@ -44,7 +48,7 @@ otherPublicKey) =>{
                 console.log("handle message:",data)
                 const newMessage = await handleMessage(data);                
                 resolve(newMessage)
-              });
+              })
         })
         
         return newMessage ? newMessage : null

@@ -35,6 +35,8 @@ export const shareKeyAndEncrypt = async (privateKey, destinationPublicKey, messa
 
   const privateKeyObj = ec.keyFromPrivate(privateKey, 'hex');
   const sharedKeyArray = privateKeyObj.derive(ec.keyFromPublic(destinationPublicKey, 'hex').getPublic()).toArray();
+
+  console.log("sharedKeyArray", sharedKeyArray)
   const sharedKeyBuffer = new Uint8Array(sharedKeyArray).buffer;
 
   const importedKey = await window.crypto.subtle.importKey(

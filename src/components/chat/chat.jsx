@@ -1,22 +1,39 @@
 import {useEffect, useState } from 'react';
 import { useUserContext } from '../../utils/userContext';
 import { sendMessageSocket, receiveMessageSocket } from '../../utils/handleMessage'
-import { recoverReceiverData } from '../../utils/handleSession';
+import { defineReceiver, removeReceiver, defineReceiverPublicKey} from '../../utils/handleSession';
+import { getPublicKey } from '../../service/user_service'
 
 function Chat() {
-    const {userData,receiverData, setReceiverData,keyPair, socket} = useUserContext()
+  const {userData, receiverData, updateReceiverData, keyPair, socket} = useUserContext()
 
-    const [messages, setMessages] = useState([]);
-    const [inputValue, setInputValue] = useState('');
-    
-    const receive = async () => {
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  
+
+  useEffect(()=>{
+    const fetch = async ()=>{
+      console.log(receiverData)
+      if(!receiverData) return
+      try {
+        const response = await getPublicKey(receiverData.id)
+        if(receiverData.publicKey != response.public_key){
+          updateReceiverData({ type: 'updatePublicKey', payload: response.public_key});
+          defineReceiverPublicKey(response.public_key)
+        }
+      } catch (error) {
+        console.log("errorGetPublicKey", error)
+      }
+      
+    }
+    fetch()
+  }, [receiverData])
+  const receive = async () => {
       const newMessage = await receiveMessageSocket(socket, userData["id"], keyPair.privateKey, receiverData.publicKey)
       console.log("NewMessage: ", newMessage)
       if(newMessage) setMessages([...messages, newMessage])
     };
   useEffect(()=>{
-    const receiverRecoved = recoverReceiverData()
-    if(!receiverData)setReceiverData(receiverRecoved)
     const areDependenciesInitialized = socket && userData && keyPair && receiverData;
 
   if (areDependenciesInitialized) {

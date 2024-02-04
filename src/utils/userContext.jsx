@@ -1,29 +1,39 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useReducer } from 'react';
 import { recoverUserData, recoverKeys, recoverReceiverData, recoverToken  } from './handleSession'
 import io from 'socket.io-client';
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [token, setToken] = useState(null)
-  const [userData, setUserData] = useState(null);
-  const [receiverData, setReceiverData] = useState(null);
-  const [keyPair, setKeyPair] = useState(null);
+  const [token, setToken] = useState(recoverToken())
+  const [userData, setUserData] = useState(recoverUserData());
+  const [keyPair, setKeyPair] = useState(recoverKeys());
   const [socket, setSocket] = useState(null);
   
+  const receiverReducer = (state, action) => {
+    switch (action.type) {
+      case 'updateAll':
+        return { ...state, ...action.payload };
+      case 'updatePublicKey':
+        return { ...state, publicKey: action.payload };
+      case 'updateIsOnline':
+        return { ...state, isOnline: action.payload };
+      
+    }
+  };
+
+  const initialState = {
+    id: '',
+    username: '',
+    publicKey: '',
+    isOnline: false,
+  };
+  
+  const [receiverData, updateReceiverData] = useReducer(receiverReducer, initialState);
+
   useEffect(()=>{
     try{
-      const receiverRecoved = recoverReceiverData()
-      if(!receiverData)setReceiverData(receiverRecoved)
-      const userDataRecoved = recoverUserData()
-      if(!userData)setUserData(userDataRecoved)
-
-      const keyPairRecoved = recoverKeys()
-      const tokenUser = recoverToken()
-
-      if(!token)setToken(tokenUser)
-      if(!keyPair)setKeyPair(keyPairRecoved)
-
+      
       if(token && !socket){
         try{
           let connection = null
@@ -43,7 +53,7 @@ export const UserProvider = ({ children }) => {
   },[token, userData, keyPair, receiverData, socket])
   
   return (
-    <UserContext.Provider value={{ token, setToken, userData, setUserData, receiverData, setReceiverData, keyPair, setKeyPair, socket, setSocket }}>
+    <UserContext.Provider value={{ token, setToken, userData, setUserData, receiverData, updateReceiverData, keyPair, setKeyPair, socket, setSocket }}>
       {children}
     </UserContext.Provider>
   );

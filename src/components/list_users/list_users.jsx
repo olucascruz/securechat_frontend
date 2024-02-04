@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../../utils/userContext"
 import io from 'socket.io-client';
 import { getGroups } from "../../service/group_service.js";
-import { defineReceiver, recoverUserData } from "../../utils/handleSession.js";
+import { defineReceiver, recoverReceiverData, recoverUserData } from "../../utils/handleSession.js";
 
 function ListUsers() {
-    const {setReceiverData, receiverData, userData, setUserdata, socket, setSocket} = useUserContext()
+    const {updateReceiverData, receiverData, userData, setUserdata, socket, setSocket} = useUserContext()
     const [users, setUsers] = useState([])
     const [groups, setGroups] = useState([])
 
@@ -43,11 +43,13 @@ function ListUsers() {
     // CÓDIGO É EXECUTADO QUANDO O USUÁRIO SELECIONA UM RECEPTOR
     const handleClick = (param) => (event) => {
         // Guarda os dados do receptor
-        setReceiverData(param);
         defineReceiver(param)
+        
         setTimeout(() => {
+            const recovedReceiveData = recoverReceiverData()
+            updateReceiverData({ type: 'updateAll', payload: recovedReceiveData});
             navigate("/chat")
-          }, 5000);
+          }, 200);
         
     };
 

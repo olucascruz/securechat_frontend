@@ -18,19 +18,21 @@ export const recoverReceiverData = () =>{
     const receiverIsOnline = sessionStorage.getItem(receiverIsOnlineString);
 
     const receiverData = {
-        id: receiverId || '', // Definir um valor padrão vazio se o item não estiver presente
-        username: receiverUsername || '',
-        publicKey: receiverPublicKey || '',
-        isOnline: receiverIsOnline// Converter para booleano se necessário
+        id: receiverId, // Definir um valor padrão vazio se o item não estiver presente
+        username: receiverUsername,
+        publicKey: receiverPublicKey,
+        isOnline: receiverIsOnline, 
     };
 
-    return receiverData    
+    return receiverData ? receiverData : null
 }
 
 
 export const recoverKeys = () =>{
     
     const userPrivateKey = sessionStorage.getItem(userPrivateKeyString)
+
+    if(!userPrivateKey)return null
     const ec_1 = new EC.ec('secp256k1');
     const userKeyPairObject = ec_1.keyFromPrivate(userPrivateKey, 'hex')
 
@@ -75,7 +77,22 @@ export const defineReceiver = (receiver) =>{
     sessionStorage.setItem(receiverUsernameString, receiver["username"]);
     sessionStorage.setItem(receiverIdString, receiver["id"]);
     sessionStorage.setItem(receiverPublicKeyString, receiver["public_key"]);
-    sessionStorage.setItem(receiverIsOnlineString, receiver["is_onine"]);
+    sessionStorage.setItem(receiverIsOnlineString, receiver["is_online"]);
+}
+
+export const defineReceiverPublicKey = (receiverPublicKey) =>{
+    sessionStorage.setItem(receiverPublicKeyString, receiverPublicKey);
+}
+
+export const defineReceiverIsOnline = (receiverIsOnline) =>{
+    sessionStorage.setItem(receiverIsOnlineString, receiverIsOnline);
+}
+
+export const removeReceiver = () => {
+    sessionStorage.removeItem(receiverUsernameString);
+    sessionStorage.removeItem(receiverIdString);
+    sessionStorage.removeItem(receiverPublicKeyString);
+    sessionStorage.removeItem(receiverIsOnlineString);
 }
 
 export const defineGroupUsers = () =>{
