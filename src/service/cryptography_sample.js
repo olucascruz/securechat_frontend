@@ -103,6 +103,9 @@ console.log('\nPessoa B decifrou a mensagem de Pessoa A:', mensagemDecifradaB);
 
 const chavePrivadaC = ec_3.genKeyPair();
 const chavePublicaC = chavePrivadaC.getPublic('hex');
+console.log("Length keyPublic B",chavePublicaB.length)
+console.log("Length keyPublic C",chavePublicaC.length)
+console.log("Length keyPublic A",chavePublicaA.length)
 
 const chaveCompartilhadaC = chavePrivadaC.derive(ec_3.keyFromPublic(chavePublicaA, 'hex').getPublic()).toArray();
 

@@ -54,3 +54,16 @@ export const loginUser = async (username, password, publicKey) =>{
   };
   }
 
+export const getPublicKey = async (user_id) =>{
+  const getPublicKeyEndpoint = `http://127.0.0.1:5000/getPublicKey?user_id=${user_id}`;
+  try {
+    const response = await axios.get(getPublicKeyEndpoint);
+    // Retornando os dados da resposta
+    return response.data;
+  } catch (error) {
+      // Lidando com erros
+      console.error('Erro na requisição:', error);
+      return []; // Retorna um array vazio em caso de erro, ou você pode lidar com o erro de outra forma
+  }
+}
+
