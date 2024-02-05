@@ -2,13 +2,12 @@ import { useState, useEffect } from "react"
 import { getUsers } from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../../utils/userContext"
-import io from 'socket.io-client';
 import { createGroups } from "../../service/group_service.js";
 
 function CreateGroup() {
-    const {setState, socket, userdata} = useUserContext()
+    const {socket, userData} = useUserContext()
     const [users, setUsers] = useState([])
-    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([userData.id]);
     
     const navigate = useNavigate()
     
@@ -22,16 +21,16 @@ function CreateGroup() {
         // if(!username) navigate("/")
         const fetchData = async () =>{
             let usersResult = await getUsers()
+            const usersResultFilted = usersResult.filter(user => user.id !== userData.id);
             console.log("result:", usersResult)
-            const usersArray = Object.keys(usersResult).map(key => ({
-                ...usersResult[key]
+            const usersArray = Object.keys(usersResultFilted ).map(key => ({
+                ...usersResultFilted [key]
             }));
-            setUsers(usersArray);
-            console.log("users:", usersResult)        
+            
+            setUsers(usersArray);    
         }
         
-        fetchData()
-        
+        fetchData()   
     },[])
 
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
@@ -49,16 +48,16 @@ function CreateGroup() {
 
 
     const handleCheckboxChange = (userId) => {
-    // Verifica se o usuário já está na lista de selecionados
-    const isSelected = selectedUsers.includes(userId);
+      // Verifica se o usuário já está na lista de selecionados
+      const isSelected = selectedUsers.includes(userId);
 
-    if (isSelected) {
-      // Se estiver, remove o usuário da lista de selecionados
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
-    } else {
-      // Se não estiver, adiciona o usuário à lista de selecionados
-      setSelectedUsers([...selectedUsers, userId]);
-    }
+      if (isSelected) {
+        // Se estiver, remove o usuário da lista de selecionados
+        setSelectedUsers(selectedUsers.filter((id) => id !== userId));
+      } else {
+        // Se não estiver, adiciona o usuário à lista de selecionados
+        setSelectedUsers([...selectedUsers, userId]);
+      }
     };
     
     const handleSubmit = async (event) => {
@@ -69,42 +68,42 @@ function CreateGroup() {
         if(!nameGroup) return
         if(selectedUsers.length < 2) return
         console.log("selected users")
-        createGroups(nameGroup, selectedUsers)
+        const response =  createGroups(nameGroup, selectedUsers)
+        if(response == 200){
+          alert("groupCreated")
+        }
     }
     return (
       <>
-      <h3> Seja um adm: {userdata["username"]}</h3>
-        <div id="viewUsers">
-            <p>Crie um grupo</p>
-            <form id="formCreateGroup" onSubmit={handleSubmit}>
-                <label htmlFor="nameGroup">name group:</label>
-                <br />
-                <input placeholder="name group" type="text" name="nameGroup" id="nameGroup" />
-                <br />
-                <p><b>Select members for group:</b></p>
-                <ul id="users">
-                    {users.map((user, index) => (
-                    <li key={index}>
-                        <span>{user.username}:{user.is_online.toString()}</span>
-                        <input type="checkbox"
-                        name={user.username}
-                        id={user.id}
-                        checked={selectedUsers.includes(user.id)}
-                        onChange={() => handleCheckboxChange(user.id)}
-                        />
-                    </li>
-                    ))}
-                </ul>
-                <hr />
-                <button type="submit"> Create Group </button>
-                <br />
-                <br />
-                <button onClick={() => {
-                        setState("list_users");
-                        navigate('/users')
-                }}> back </button>
-            </form>
-        </div>
+      <h3> Seja um adm: {userData["username"]}</h3>
+      <div id="viewUsers">
+        <p>Crie um grupo</p>
+        <form id="formCreateGroup" onSubmit={handleSubmit}>
+            <label htmlFor="nameGroup">name group:</label>
+            <br />
+            <input placeholder="name group" type="text" name="nameGroup" id="nameGroup" />
+            <br />
+            <p><b>Select members for group:</b></p>
+            <ul id="users">
+              {users.map((user, index) => (
+              <li key={index}>
+                  <span>{user.username}:{user.is_online.toString()}</span>
+                  <input type="checkbox"
+                  name={user.username}
+                  id={user.id}
+                  checked={selectedUsers.includes(user.id)}
+                  onChange={() => handleCheckboxChange(user.id)}
+                  />
+              </li>
+              ))}
+            </ul>
+            <hr />
+            <button type="submit"> Create Group </button>
+            <br />
+            <br />
+            <button onClick={()=>navigate('/users')}> back </button>
+        </form>
+      </div>
       </>
     )
   }
