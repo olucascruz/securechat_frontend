@@ -14,6 +14,7 @@ function ListUsers() {
     const navigate = useNavigate()
 
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
+    //Responsavel por pegar os usuários
     useEffect(()=>{
         // Obtém os dados da sessionStorage
         // if(!username) navigate("/")
@@ -30,11 +31,13 @@ function ListUsers() {
                 console.log("users:", usersResult)
             
                 const  groupResult = await getGroups(userData["id"])
-                console.log("group:", groupResult)
+                
                 const groupArray = Object.keys(groupResult).map(key => ({
                     ...groupResult[key]
                 }));
                 setGroups(groupArray);
+                console.log("group:", groupResult)
+
             } 
         }
         fetchData()
@@ -73,9 +76,10 @@ function ListUsers() {
                 )): null}
             </ul>
             <hr />
-            <p>Groups</p><button onClick={handleClickCreateGroup()}>Create group</button>
+            <p>Groups - {groups.length}</p>
+            <button onClick={handleClickCreateGroup()}>Create group</button>
             <ul id="groups">
-                {groups ? groups.map((group, index) => (
+                {groups.length > 0 ? groups.map((group, index) => (
                 <li key={index}>
                     <span>{group.name}</span>
                     <button data-value={group.id} className="groupButton">
