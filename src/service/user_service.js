@@ -23,16 +23,14 @@ export const registerUser = async (username, password, publicKey) =>{
     };
 
     const registerEndpoint = 'http://127.0.0.1:5000/register';
-    axios.post(registerEndpoint, data)
-  .then(response => {
-    // Manipulando os dados da resposta
-    console.log('Dados da resposta:', response.data);
-    return response.status
-  })
-  .catch(error => {
+    try{
+      const response = await axios.post(registerEndpoint, data)
+      return response.status
+    }catch(error) {
     // Lidando com erros
-    console.error('Erro na requisição:', error);
-  });
+      console.error('Erro na requisição:', error);
+      return null
+    };
 
 }
 
