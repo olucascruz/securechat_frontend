@@ -64,6 +64,7 @@ export const sendMessageGroupSocket = async (socket, userId, userMessage, userPr
     console.log("groupData-sendMsgSocket",groupData)
     
     for (let memberId in groupData.members) {
+        if(memberId == userId) continue  
         let messageEncrypted = null
         try{
             const memberPublicKey = groupData.members[memberId];
