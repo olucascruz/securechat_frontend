@@ -13,7 +13,7 @@ function Chat() {
 
   useEffect(()=>{
     const fetch = async ()=>{
-      console.log(receiverData)
+      console.log("receiver data: ",receiverData)
       if(!receiverData) return
       try {
         const response = await getPublicKey(receiverData.id)

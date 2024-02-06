@@ -11,6 +11,7 @@ export const sendMessageSocket = async (socket, userMessage, userPrivateKey, rec
     let messageEncrypted = null
     try{
         messageEncrypted = await shareKeyAndEncrypt(userPrivateKey, receiverData["publicKey"], userMessage["message"])
+        console.log("ecrypt message - fun -> send message group:",messageEncrypted)
     }catch(error){
     console.log("error encrypt:", error)
     }
@@ -26,12 +27,13 @@ export const sendMessageSocket = async (socket, userMessage, userPrivateKey, rec
 export const receiveMessageSocket = async (socket, userId, userPrivateKey, 
 otherPublicKey) =>{
     if(!socket)return
-    console.log("userId-receiveMsgSocket",userId)
-    console.log("userPrivate-receiveMsgSocket",userPrivateKey)
-    console.log("receiverPubblic-receiveMsgSocket",otherPublicKey)
+    console.log("user id - fun ->receiveMsgSocket",userId)
+    console.log("user private key - fun -> receiveMsgSocket",userPrivateKey)
+    console.log("receiver public key - fun ->receiveMsgSocket",otherPublicKey)
 
     const handleMessage = async (data) => {
         try{
+            console.log("receive message encrypt:", data.message)
             const newMessage = await decryptMessage(userPrivateKey,otherPublicKey, data.message)
             const newData = {"username":data.username || "error",
                         "message":newMessage || "error"}
@@ -45,7 +47,7 @@ otherPublicKey) =>{
         const newMessage = await new Promise( resolve =>{ 
             
             socket.on(`message-${userId}`, async (data) => {
-                console.log("handle message:",data)
+                console.log("message received - fun -> receive message socket:",data)
                 const newMessage = await handleMessage(data);                
                 resolve(newMessage)
               })
@@ -59,19 +61,19 @@ otherPublicKey) =>{
 export const sendMessageGroupSocket = async (socket, userId, userMessage, userPrivateKey, groupData) =>{
     if(!socket) return false
     if(!groupData) return false
-    console.log("message-sendMsgSocket",userMessage)
-    console.log("userPrivate-sendMsgSocket",userPrivateKey)
-    console.log("groupData-sendMsgSocket",groupData)
+    console.log("message - fun -> sendMsgSocket",userMessage)
+    console.log("user private key - fun -> sendMsgSocket",userPrivateKey)
+    console.log("group data - fun -> sendMsgSocket",groupData)
     
     for (let memberId in groupData.members) {
         if(memberId == userId) continue  
         let messageEncrypted = null
         try{
             const memberPublicKey = groupData.members[memberId];
-            console.log("groupData in handle msg", groupData)
-            console.log("memberPublicKey:", memberPublicKey)
+            console.log("group data handle msg", groupData)
+            console.log("member public key ->  fun send message group socket:", memberPublicKey)
             messageEncrypted = await shareKeyAndEncrypt(userPrivateKey, memberPublicKey, userMessage["message"])
-            
+            console.log("ecrypt message - fun -> send message group:",messageEncrypted)
        
             socket.emit(`message-group`, {
                 username: userMessage["username"],
@@ -92,15 +94,16 @@ export const sendMessageGroupSocket = async (socket, userId, userMessage, userPr
 
 export const receiveMessageGroupSocket = async (socket, userId, userPrivateKey, groupData) =>{
     if(!socket)return
-    console.log("userId-receiveMsgSocket",userId)
-    console.log("userPrivate-receiveMsgSocket",userPrivateKey)
-    console.log("groupData-receiveMsgSocket",groupData)
+    console.log("user id - fun -> receiveMsgSocket",userId)
+    console.log("user private key - fun -> receiveMsgSocket",userPrivateKey)
+    console.log("group data -> fun -> receiveMsgSocket",groupData)
 
     const handleMessage = async (data) => {
         try{
             const originPublicKey = groupData["members"][data.sender]
             if(!originPublicKey) return null
-            console.log("originPublicKey:", originPublicKey)
+            console.log("origin public Key - fun -> handleMessege:", originPublicKey)
+            console.log("message encrypt:", data.message)
             const newMessage = await decryptMessage(userPrivateKey, originPublicKey, data.message)
             
             const newData = {"username":data.username || "error",
@@ -115,7 +118,7 @@ export const receiveMessageGroupSocket = async (socket, userId, userPrivateKey, 
         const newMessage = await new Promise( resolve =>{ 
             
             socket.on(`message-group-${groupData.id}-${userId}`, async (data) => {
-                console.log("handle message:",data)
+                console.log("message - fun -> receive group message:",data)
                 const newMessage = await handleMessage(data);                
                 resolve(newMessage)
               })

@@ -36,7 +36,7 @@ export const shareKeyAndEncrypt = async (privateKey, destinationPublicKey, messa
   const privateKeyObj = ec.keyFromPrivate(privateKey, 'hex');
   const sharedKeyArray = privateKeyObj.derive(ec.keyFromPublic(destinationPublicKey, 'hex').getPublic()).toArray();
 
-  console.log("sharedKeyArray", sharedKeyArray)
+  console.log("shared key array - fun -> shareKeyAndEncrypt", sharedKeyArray)
   const sharedKeyBuffer = new Uint8Array(sharedKeyArray).buffer;
 
   const importedKey = await window.crypto.subtle.importKey(
@@ -49,7 +49,7 @@ export const shareKeyAndEncrypt = async (privateKey, destinationPublicKey, messa
   // const sharedKeyBuffer=new Uint8Array(sharedKey)
   const iv = window.crypto.getRandomValues(new Uint8Array(16));
   
-  console.log("iv", iv)
+  console.log("iv - fun -> shareKeyAndEncrypt", iv)
   let cipher = null;
   try {
       cipher = await window.crypto.subtle.encrypt({

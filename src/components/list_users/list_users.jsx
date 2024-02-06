@@ -6,7 +6,7 @@ import { getGroups } from "../../service/group_service.js";
 import { defineReceiver, recoverReceiverData, defineGroup, recoverGroup} from "../../utils/handleSession.js";
 
 function ListUsers() {
-    const {updateReceiverData, userData, updateGroupData} = useUserContext()
+    const {updateReceiverData, userData, updateGroupData, keyPair} = useUserContext()
     const [users, setUsers] = useState([])
     const [groups, setGroups] = useState([])
 
@@ -15,17 +15,17 @@ function ListUsers() {
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
     //Responsavel por pegar os usuários
     useEffect(()=>{
+        console.log("key pair: ",keyPair)
         const fetchData = async () =>{
             let usersResult = await getUsers()
             if(userData && userData["id"]){
                 const usersResultFilted = usersResult.filter(user => user.id !== userData.id);
-                console.log("userId:",userData)
-                console.log("result:", usersResultFilted)
+                console.log("user id:",userData)
+                console.log("users listed -> fun -> getUsers: ", usersResultFilted)
                 const usersArray = Object.keys(usersResultFilted).map(key => ({
                     ...usersResultFilted[key]
                 }));
                 setUsers(usersArray);
-                console.log("users:", usersResult)
             
                 const  groupResult = await getGroups(userData["id"])
                 
@@ -33,7 +33,7 @@ function ListUsers() {
                     ...groupResult[key]
                 }));
                 setGroups(groupArray);
-                console.log("group:", groupResult)
+                console.log("groups (user include) - fun -> getGroups:", groupResult)
 
             } 
         }
