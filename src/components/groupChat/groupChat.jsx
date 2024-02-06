@@ -48,13 +48,12 @@ function GroupChat() {
 
   const receive = async () => {
       const newMessage = await receiveMessageGroupSocket(socket, userData["id"], keyPair.privateKey, groupData)
-      console.log("NewMessage: ", newMessage)
       if(newMessage) setMessages([...messages, newMessage])
     };
   useEffect(()=>{
     const areDependenciesInitialized = socket && userData && keyPair &&groupData;
-
-  if (areDependenciesInitialized) {
+    const publicKeys = Object.values(groupData["members"]);
+  if (areDependenciesInitialized && publicKeys[0] != "") {
     receive();
   }
   
