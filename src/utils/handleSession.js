@@ -11,6 +11,10 @@ const usernameString = "username"
 const userIdString = "userId"
 const userTokenString = "userToken"
 
+const groupUsersIdString = "objectUsersId"
+const groupNameString = "groupName"
+const groupIdString = "groupId"
+
 export const recoverReceiverData = () =>{
     const receiverId = sessionStorage.getItem(receiverIdString);
     const receiverUsername = sessionStorage.getItem(receiverUsernameString);
@@ -60,6 +64,34 @@ export const recoverToken = () =>{
     return userToken ? userToken : null
 }
 
+export const recoverGroup = () =>{
+    const membersId = sessionStorage.getItem(groupUsersIdString);
+    const groupName = sessionStorage.getItem(groupNameString);
+    const groupId = sessionStorage.getItem(groupIdString);
+    
+    try {
+        const objectMembersId = JSON.parse(membersId);
+    
+        const recovedGroup = {
+            "id": groupId,
+            "name":groupName,
+            "members":objectMembersId
+        }
+        return recovedGroup
+    } catch (error) {
+        console.log(error)   
+    }
+    
+    
+    const recovedGroup = {
+        "id": groupId,
+        "name":groupName,
+        "members":{}
+    }
+
+    return recovedGroup ? recovedGroup : null
+}
+
 export const defineUserKeyPair = (privateKey, publicKey) =>{
     sessionStorage.setItem(userPrivateKeyString, privateKey);
     sessionStorage.setItem(userPublicKeyString, publicKey);
@@ -87,6 +119,22 @@ export const defineReceiverPublicKey = (receiverPublicKey) =>{
 
 export const defineReceiverIsOnline = (receiverIsOnline) =>{
     sessionStorage.setItem(receiverIsOnlineString, receiverIsOnline);
+}
+
+export const defineGroup = (group) =>{
+    let objectUsersId = group.members.reduce((obj, item) => {
+    obj[item] = '';
+    return obj;
+    }, {});
+    const  objectString = JSON.stringify(objectUsersId);
+    sessionStorage.setItem(groupUsersIdString, objectString);
+    sessionStorage.setItem(groupNameString, group.name);
+    sessionStorage.setItem(groupIdString, group.id);
+}
+
+export const defineGroupUsersIdWithPublicKey = (objectUsersIdWithPublicKey) =>{
+    const  objectString = JSON.stringify(objectUsersIdWithPublicKey);
+    sessionStorage.setItem(groupUsersIdString, objectString);
 }
 
 export const removeReceiver = () => {

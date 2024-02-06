@@ -2,12 +2,11 @@ import { useState, useEffect } from "react"
 import { getUsers } from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../../utils/userContext"
-import io from 'socket.io-client';
 import { getGroups } from "../../service/group_service.js";
-import { defineReceiver, recoverReceiverData, recoverUserData } from "../../utils/handleSession.js";
+import { defineReceiver, recoverReceiverData, defineGroup, recoverGroup} from "../../utils/handleSession.js";
 
 function ListUsers() {
-    const {updateReceiverData, receiverData, userData, setUserdata, socket, setSocket} = useUserContext()
+    const {updateReceiverData, userData, updateGroupData} = useUserContext()
     const [users, setUsers] = useState([])
     const [groups, setGroups] = useState([])
 
@@ -16,8 +15,6 @@ function ListUsers() {
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
     //Responsavel por pegar os usuários
     useEffect(()=>{
-        // Obtém os dados da sessionStorage
-        // if(!username) navigate("/")
         const fetchData = async () =>{
             let usersResult = await getUsers()
             if(userData && userData["id"]){
@@ -44,7 +41,7 @@ function ListUsers() {
     },[userData])
     
     // CÓDIGO É EXECUTADO QUANDO O USUÁRIO SELECIONA UM RECEPTOR
-    const handleClick = (param) => (event) => {
+    const handleClickChatWithUser = (param)=> () => {
         // Guarda os dados do receptor
         defineReceiver(param)
         
@@ -56,8 +53,19 @@ function ListUsers() {
         
     };
 
-    const handleClickCreateGroup = (param) => (event) => {
+    const handleClickCreateGroup = () => {
         navigate("/add_group")
+    }
+
+    const handleClickChatWithGroup = (param) => () =>{
+        defineGroup(param)
+
+        setTimeout(() => {
+            const recovedGroupData = recoverGroup()
+            updateGroupData({ type: 'updateAll', 
+            payload: recovedGroupData})
+            navigate("/group_chat")
+          }, 200);
     }
     
     return (
@@ -69,7 +77,7 @@ function ListUsers() {
                 {users ? users.map((user, index) => (
                 <li key={index}>
                     <span>{user.username}:{user.is_online.toString()}</span>
-                    <button data-value={user.id} className="btStartChat" onClick={handleClick(user)}>
+                    <button data-value={user.id} className="btStartChat" onClick={handleClickChatWithUser(user)}>
                         start chat
                     </button>
                 </li>
@@ -77,13 +85,17 @@ function ListUsers() {
             </ul>
             <hr />
             <p>Groups - {groups.length}</p>
-            <button onClick={handleClickCreateGroup()}>Create group</button>
+            <button onClick={handleClickCreateGroup}>
+                Create group
+            </button>
             <ul id="groups">
                 {groups.length > 0 ? groups.map((group, index) => (
                 <li key={index}>
                     <span>{group.name}</span>
-                    <button data-value={group.id} className="groupButton">
-                        enter group
+                    <button 
+                    data-value={group.id} 
+                    onClick={handleClickChatWithGroup(group)} className="groupButton">
+                    enter group
                     </button>
                 </li>
                 )): null}

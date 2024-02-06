@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useReducer } from 'react';
-import { recoverUserData, recoverKeys, recoverReceiverData, recoverToken  } from './handleSession'
+import { recoverUserData, recoverKeys, recoverReceiverData, recoverToken, recoverGroup  } from './handleSession'
 import io from 'socket.io-client';
 
 const UserContext = createContext();
@@ -25,6 +25,25 @@ export const UserProvider = ({ children }) => {
   
   const recovedReceiverData = recoverReceiverData()
   const [receiverData, updateReceiverData] = useReducer(receiverReducer, recovedReceiverData);
+
+
+  const groupReducer = (state, action) => {
+    switch (action.type) {
+      case 'updateAll':
+        return { ...state, ...action.payload };
+      case 'updateMembers':
+        return { ...state, members: action.payload };
+      case 'updateGroupId':
+        return { ...state, id: action.payload };
+      case 'updateGroupName':
+        return { ...state, name: action.payload };
+    }
+  };
+
+  const recovedGroup = recoverGroup()
+  const [groupData, updateGroupData] = useReducer(groupReducer, recovedGroup);
+  
+
   useEffect(()=>{
     try{
       
@@ -47,7 +66,7 @@ export const UserProvider = ({ children }) => {
   },[token, userData, keyPair, receiverData, socket])
   
   return (
-    <UserContext.Provider value={{ token, setToken, userData, setUserData, receiverData, updateReceiverData, keyPair, setKeyPair, socket, setSocket }}>
+    <UserContext.Provider value={{ token, setToken, userData, setUserData, receiverData, updateReceiverData, keyPair, setKeyPair, socket, setSocket,  groupData, updateGroupData}}>
       {children}
     </UserContext.Provider>
   );

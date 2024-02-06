@@ -4,6 +4,7 @@ import ListUsers from './components/list_users/list_users'
 import Chat from './components/chat/chat'
 import Register from './components/register/register'
 import CreateGroup from './components/create_group/create_group'
+import GroupChat from './components/groupChat/groupChat'
 import axios from 'axios'
 import './App.css'
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
@@ -20,6 +21,7 @@ function App() {
     <>
       <UserProvider>
       <Routes>
+        <Route path="/group_chat" element={<GroupChat/>} />
         <Route path="/add_group" element={<CreateGroup/>} />
         <Route path="/users" element={<ListUsers/>} />
         <Route path="/chat" element={<Chat/>} />
