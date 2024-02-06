@@ -72,7 +72,7 @@ export const sendMessageGroupSocket = async (socket, userId, userMessage, userPr
             messageEncrypted = await shareKeyAndEncrypt(userPrivateKey, memberPublicKey, userMessage["message"])
             
        
-            socket.timeout(5000).emit(`message-group`, {
+            socket.emit(`message-group`, {
                 username: userMessage["username"],
                 message: messageEncrypted,
                 receiver: memberId,
@@ -97,11 +97,10 @@ export const receiveMessageGroupSocket = async (socket, userId, userPrivateKey, 
 
     const handleMessage = async (data) => {
         try{
-            const originPublicKey = groupData["members"][data.receiver]
+            const originPublicKey = groupData["members"][data.sender]
             if(!originPublicKey) return null
             console.log("originPublicKey:", originPublicKey)
             const newMessage = await decryptMessage(userPrivateKey, originPublicKey, data.message)
-            
             
             const newData = {"username":data.username || "error",
                         "message":newMessage || "error"}
