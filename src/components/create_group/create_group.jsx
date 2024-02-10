@@ -12,19 +12,17 @@ function CreateGroup() {
     const navigate = useNavigate()
     
 
-    // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
     useEffect(()=>{
-        // Obtém os dados da sessionStorage
         const dataName = sessionStorage.getItem("username")
         const dataId = sessionStorage.getItem("userId")
         
         // if(!username) navigate("/")
         const fetchData = async () =>{
             let usersResult = await getUsers()
-            const usersResultFilted = usersResult.filter(user => user.id !== userData.id);
+            const usersResultFiltered = usersResult.filter(user => user.id !== userData.id);
             console.log("result:", usersResult)
-            const usersArray = Object.keys(usersResultFilted ).map(key => ({
-                ...usersResultFilted [key]
+            const usersArray = Object.keys(usersResultFiltered ).map(key => ({
+                ...usersResultFiltered [key]
             }));
             
             setUsers(usersArray);    
@@ -33,7 +31,6 @@ function CreateGroup() {
         fetchData()   
     },[])
 
-    // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
     useEffect(()=>{
         if(!socket) return
         socket.on('jsonChanged', async (data) => {
@@ -48,14 +45,11 @@ function CreateGroup() {
 
 
     const handleCheckboxChange = (userId) => {
-      // Verifica se o usuário já está na lista de selecionados
       const isSelected = selectedUsers.includes(userId);
 
       if (isSelected) {
-        // Se estiver, remove o usuário da lista de selecionados
         setSelectedUsers(selectedUsers.filter((id) => id !== userId));
       } else {
-        // Se não estiver, adiciona o usuário à lista de selecionados
         setSelectedUsers([...selectedUsers, userId]);
       }
     };
@@ -77,7 +71,7 @@ function CreateGroup() {
       <>
       <h3> Seja um adm: {userData["username"]}</h3>
       <div id="viewUsers">
-        <p>Crie um grupo</p>
+        <p> Crie um novo grupo </p>
         <form id="formCreateGroup" onSubmit={handleSubmit}>
             <label htmlFor="nameGroup">name group:</label>
             <br />
