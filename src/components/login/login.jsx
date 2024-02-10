@@ -1,16 +1,21 @@
 import { loginUser } from "../../service/user_service"
-import { useEffect } from "react";
-import io from 'socket.io-client';
 import { useNavigate } from "react-router-dom";
 import {generateKeyAndExtractPublic} from "../../service/cryptography_service" 
 import { useUserContext } from "../../utils/userContext";
-import { defineToken, defineUserData, defineUserKeyPair } from "../../utils/handleSession";
-
+import { defineToken, defineUserData, defineUserKeyPair, clearSessionStorage } from "../../utils/handleSession";
+import { InputBase } from "../utilsComponents/InputBase";
+import { InputPassword } from "../utilsComponents/InputPassword";
+import {ButtonSubmit} from "../utilsComponents/ButtonSubmit"
+import { FormBase } from "../utilsComponents/FormBase";
+import { useEffect } from "react";
 
 function Login() {
-    const {setUserData, setToken, setKeyPair} = useUserContext()
+    const {setUserData, setToken, setKeyPair, token} = useUserContext()
     const navigate = useNavigate()
 
+    useEffect(()=>{
+      clearSessionStorage()
+    }, [])
     const handleSubmit = async (event) => {
         event.preventDefault();
         
@@ -18,15 +23,24 @@ function Login() {
         const passwordInput = document.getElementById("ipassword");
 
         const username = usernameInput.value;
-        const password = passwordInput.value;     
+        const password = passwordInput.value;
+        
+        if(!username || !passwordInput) return
+
         const keyPair = generateKeyAndExtractPublic()
         console.log(keyPair)
           
-        // Registre o usuário
-        const response = await loginUser(username, password, keyPair.publicKey);
+        // loga o usuário
+        let response;
+        try{
+          response = await loginUser(username, password, keyPair.publicKey);
+        }catch(error){
+          console.log("login error>",error)
+          return
+        }
         console.log(response)
 
-        if(response.status == 200){
+        if(response && response.status == 200){
           const userId = response.data["id"]
           const token = response.data["token"]
 
@@ -55,24 +69,20 @@ function Login() {
       return (
         <>
         <h3>Login</h3>
-          <form 
-            id="formName" 
+          <FormBase
             onSubmit={handleSubmit}>
-            <p>Username</p>
-            <input 
-              placeholder="username"
-              required id="iusername" 
-              type="text" />
-            <p>Password</p>
-            <input 
+            <p style={{ color: 'black' }}>Username</p>
+            <InputBase name="iusername" id="iusername" placeholder="username"></InputBase>
+            
+            <p style={{ color: 'black' }}>Password</p>
+            <InputPassword 
               placeholder="password" 
-              required 
               id="ipassword" 
               type="text" />
             <br />
-            <button type="submit"> send </button>
-          </form>
-          <a href="/register"> register </a>
+            <ButtonSubmit> Login </ButtonSubmit>
+            <a href="/register"> register </a>
+          </FormBase>
         </>
       );
     }
