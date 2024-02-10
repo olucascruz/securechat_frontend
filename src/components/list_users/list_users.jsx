@@ -3,7 +3,7 @@ import { getUsers, logoutUser } from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../../utils/userContext"
 import { getGroups } from "../../service/group_service.js";
-import { defineReceiver, recoverReceiverData, defineGroup, recoverGroup} from "../../utils/handleSession.js";
+import { defineReceiver} from "../../utils/handleSession.js";
 import { defineToken } from "../../utils/handleSession.js";
 import ButtonGroup from "./ButtonGroup.jsx";
 import { ListChatStyled } from "./listChatStyle.jsx";
@@ -31,11 +31,11 @@ function ListUsers() {
   
 
     const updateUsers = (usersResult) =>{
-        const usersResultFilted = usersResult.filter(user => user.id !== userData.id);
+        const usersResultFiltered = usersResult.filter(user => user.id !== userData.id);
                 console.log("user id:",userData)
-                console.log("users listed -> fun -> getUsers: ", usersResultFilted)
-                const usersArray = Object.keys(usersResultFilted).map(key => ({
-                    ...usersResultFilted[key]
+                console.log("users listed -> fun -> getUsers: ", usersResultFiltered)
+                const usersArray = Object.keys(usersResultFiltered).map(key => ({
+                    ...usersResultFiltered[key]
                 }));
                 setUsers(usersArray);
     }
@@ -49,7 +49,7 @@ function ListUsers() {
     }
 
     // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
-    //Responsavel por pegar os usuários
+    // Responsável por pegar os usuários
     useEffect(()=>{
         console.log("TOKEN: ",token)
         console.log("key pair: ",keyPair)

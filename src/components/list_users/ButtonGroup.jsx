@@ -55,9 +55,9 @@ const ButtonGroup = ({ group, index }) => {
       defineGroup(param)
 
       setTimeout(() => {
-          const recovedGroupData = recoverGroup()
+          const recoveredGroupData = recoverGroup()
           updateGroupData({ type: 'updateAll', 
-          payload: recovedGroupData})
+          payload: recoveredGroupData})
           navigate("/group_chat")
         }, 200);
   }

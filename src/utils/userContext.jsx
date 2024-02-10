@@ -23,8 +23,8 @@ export const UserProvider = ({ children }) => {
   };
 
   
-  const recovedReceiverData = recoverReceiverData()
-  const [receiverData, updateReceiverData] = useReducer(receiverReducer, recovedReceiverData);
+  const recoveredReceiverData = recoverReceiverData()
+  const [receiverData, updateReceiverData] = useReducer(receiverReducer, recoveredReceiverData);
 
 
   const groupReducer = (state, action) => {
@@ -40,8 +40,8 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  const recovedGroup = recoverGroup()
-  const [groupData, updateGroupData] = useReducer(groupReducer, recovedGroup);
+  const recoveredGroup = recoverGroup()
+  const [groupData, updateGroupData] = useReducer(groupReducer, recoveredGroup);
   
 
   useEffect(()=>{

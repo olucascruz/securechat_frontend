@@ -46,8 +46,8 @@ const ItemChat = ({index, user}) =>{
     defineReceiver(param)
     const navigate = useNavigate()
     setTimeout(() => {
-        const recovedReceiveData = recoverReceiverData()
-        updateReceiverData({ type: 'updateAll', payload: recovedReceiveData});
+        const recoveredReceiveData = recoverReceiverData()
+        updateReceiverData({ type: 'updateAll', payload: recoveredReceiveData});
         navigate("/chat")
       }, 200);
     
