@@ -109,7 +109,10 @@ export const defineToken = (token) =>{
 export const defineReceiver = (receiver) =>{
     sessionStorage.setItem(receiverUsernameString, receiver["username"]);
     sessionStorage.setItem(receiverIdString, receiver["id"]);
-    sessionStorage.setItem(receiverPublicKeyString, receiver["public_key"]);
+    if("public_key" in receiver){
+        sessionStorage.setItem(receiverPublicKeyString, 
+                                receiver["public_key"])
+    }
     sessionStorage.setItem(receiverIsOnlineString, receiver["is_online"]);
 }
 
@@ -147,4 +150,21 @@ export const removeReceiver = () => {
 export const defineGroupUsers = () =>{
 
 
+}
+
+export function clearSessionStorage() {
+    sessionStorage.removeItem(receiverIdString);
+    sessionStorage.removeItem(receiverUsernameString);
+    sessionStorage.removeItem(receiverPublicKeyString);
+    sessionStorage.removeItem(receiverIsOnlineString);
+
+    sessionStorage.removeItem(userPrivateKeyString);
+    sessionStorage.removeItem(userPublicKeyString);
+    sessionStorage.removeItem(usernameString);
+    sessionStorage.removeItem(userIdString);
+    sessionStorage.removeItem(userTokenString);
+
+    sessionStorage.removeItem(groupUsersIdString);
+    sessionStorage.removeItem(groupNameString);
+    sessionStorage.removeItem(groupIdString);
 }
