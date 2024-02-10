@@ -13,12 +13,13 @@ const StyledFormContainer = styled.div`
 const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 // Componente funcional que renderiza o formulário estilizado
-export function FormBase({ children, onSubmit }){
+export function FormBase({ children, onSubmit, id }){
   return (
-    <StyledFormContainer>
+    <StyledFormContainer id={id}>
       <StyledForm onSubmit={onSubmit}>
         {children}
       </StyledForm>

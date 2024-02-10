@@ -1,6 +1,12 @@
 import { registerUser} from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom";
 import {generateKeyAndExtractPublic} from "../../service/cryptography_service" 
+import { RegisterStyled } from "./registerStyle.jsx";
+import { FormBase } from "../utilsComponents/FormBase.jsx";
+import { InputBase } from "../utilsComponents/InputBase.jsx";
+import { InputPassword } from "../utilsComponents/InputPassword.jsx";
+import logoChatSeguro from '../../assets/logoChatSeguro.png'
+import { ButtonSubmit } from "../utilsComponents/ButtonSubmit.jsx";
 
 function Register() {
   const navigate = useNavigate()
@@ -8,8 +14,8 @@ function Register() {
   const handleSubmit = async (event) => {
       event.preventDefault();
       
-      const usernameInput = document.getElementById("iusername");
-      const passwordInput = document.getElementById("ipassword");
+      const usernameInput = document.getElementById("iUsername");
+      const passwordInput = document.getElementById("iPassword");
 
       const username = usernameInput.value;
       const password = passwordInput.value;
@@ -25,18 +31,20 @@ function Register() {
     };
 
   return (
-    <>
-    <h3>Registre sua conta</h3>
-      <form id="formName" onSubmit={handleSubmit}>
-        <p>Username</p>
-        <input placeholder="username" required id="iusername" type="text" />
-        <p>Password</p>
-        <input placeholder="password" required id="ipassword" type="text" />
+    <RegisterStyled>
+      <img src={logoChatSeguro} alt="logo chat seguro" />
+      <FormBase id={"formRegister"}  onSubmit={handleSubmit}>
+        <h3 className={"titleForm"} >Registre sua conta</h3>
+        <p className="label">Nome de usuário</p>
+        <InputBase placeholder="nome de usuário" required id="iUsername" />
+        <p className="label">Senha</p>
+        <InputPassword placeholder="senha" required id="iPassword"/>
         <br />
-        <button type="submit">Registrar</button>
-      </form>
-    <a href="/"> login</a>
-    </>
+        <ButtonSubmit>Registrar</ButtonSubmit>
+        <a href="/" className="linkLogin"> login </a>
+
+      </FormBase>
+    </RegisterStyled>
   );
 }
 

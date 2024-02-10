@@ -5,10 +5,11 @@ import styled from 'styled-components';
 const StyledSubmitButton = styled.button`
   padding: 10px 20px;
   font-size: 16px;
-  background-color: dodgerblue;
+  background-color: #4B2DFF;
   color: white;
   border: none;
   border-radius: 5px;
+  width: 40%;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 20px;

@@ -8,6 +8,8 @@ import { InputPassword } from "../utilsComponents/InputPassword";
 import {ButtonSubmit} from "../utilsComponents/ButtonSubmit"
 import { FormBase } from "../utilsComponents/FormBase";
 import { useEffect } from "react";
+import { LoginStyled } from "./loginStyle";
+import logoChatSeguro from '../../assets/logoChatSeguro.png'
 
 function Login() {
     const {setUserData, setToken, setKeyPair, token} = useUserContext()
@@ -19,8 +21,8 @@ function Login() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         
-        const usernameInput = document.getElementById("iusername");
-        const passwordInput = document.getElementById("ipassword");
+        const usernameInput = document.getElementById("iUsername");
+        const passwordInput = document.getElementById("iPassword");
 
         const username = usernameInput.value;
         const password = passwordInput.value;
@@ -48,11 +50,11 @@ function Login() {
                          keyPair.publicKey)
           
           
-          const userdata = {
+          const dataUser = {
             "username":username,
             "id":userId
           }
-          setUserData(userdata);
+          setUserData(dataUser);
           setToken(token)
           defineUserData(username, userId)
           defineToken(token)
@@ -67,23 +69,29 @@ function Login() {
       
     
       return (
-        <>
-        <h3>Login</h3>
+        <LoginStyled>
+          <img src={logoChatSeguro} alt="logo chat seguro" />
           <FormBase
-            onSubmit={handleSubmit}>
-            <p style={{ color: 'black' }}>Username</p>
-            <InputBase name="iusername" id="iusername" placeholder="username"></InputBase>
+            onSubmit={handleSubmit}
+            id={"formLogin"}>
+            <h3 className="titleForm" >Login</h3>
+          
+            <p className="label">Nome de usuário</p>
+            <InputBase name="iUsername" id="iUsername" placeholder="nome de usuário"></InputBase>
             
-            <p style={{ color: 'black' }}>Password</p>
+            <p className="label">Senha</p>
             <InputPassword 
-              placeholder="password" 
-              id="ipassword" 
+              placeholder="senha" 
+              id="iPassword" 
               type="text" />
             <br />
-            <ButtonSubmit> Login </ButtonSubmit>
-            <a href="/register"> register </a>
+            <ButtonSubmit> Entrar </ButtonSubmit>
+            <a href="/register"
+            className="linkRegister"
+            > register </a>
           </FormBase>
-        </>
+
+          </LoginStyled>
       );
     }
   

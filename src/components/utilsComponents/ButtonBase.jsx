@@ -4,7 +4,7 @@ import styled from 'styled-components';
 const StyledButton = styled.button`
   padding: 10px 20px;
   font-size: 16px;
-  background-color: dodgerblue;
+  background-color: #4B2DFF;
   color: white;
   border: none;
   border-radius: 5px;
@@ -12,7 +12,7 @@ const StyledButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #1e90ff; /* Tom mais escuro ao passar o mouse */
+    background-color: #e9f4ff; /* Tom mais escuro ao passar o mouse */
   }
 
   &:focus {

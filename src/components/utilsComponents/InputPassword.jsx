@@ -6,6 +6,10 @@ const StyledPasswordInput = styled.input`
   padding: 10px;
   font-size: 16px;
   border: 2px solid #ccc;
+  background-color: #fff;
+  width: 70%;
+  color: black;
+  height: 35px;
   border-radius: 5px;
   outline: none;
 

@@ -3,8 +3,12 @@ const StyledInput = styled.input`
   padding: 10px;
   font-size: 16px;
   border: 2px solid #ccc;
+  background-color: #fff;
+  color: black;
   border-radius: 5px;
   outline: none;
+  width: 70%;
+  height: 35px;
 
   &:focus {
     border-color: dodgerblue;
