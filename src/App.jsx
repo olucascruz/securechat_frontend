@@ -6,18 +6,21 @@ import Register from './components/register/register'
 import CreateGroup from './components/create_group/create_group'
 import GroupChat from './components/groupChat/groupChat'
 import './App.css'
-import { HashRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useNavigate, useLocation} from 'react-router-dom';
 import { UserProvider } from './utils/userContext'
 import { recoverToken} from './utils/handleSession'
 
 function App() {
   const navigate = useNavigate()
+  const location = useLocation();
   
 
   useEffect(()=>{
-    const recovedToken = recoverToken()
-    
-    recovedToken ? null : navigate("/")
+    const recoveredToken = recoverToken()
+    console.log(location)
+    if(location.pathname != "/register" && location.pathname != "/"){
+      recoveredToken ? null : navigate("/")
+    }
   }, [recoverToken])
   
   return (
