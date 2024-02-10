@@ -1,16 +1,19 @@
 import {useEffect, useState } from 'react';
 import { useUserContext } from '../../utils/userContext';
 import { sendMessageSocket, receiveMessageSocket } from '../../utils/handleMessage'
-import { defineReceiver, removeReceiver, defineReceiverPublicKey} from '../../utils/handleSession';
+import { defineReceiver, defineReceiverPublicKey} from '../../utils/handleSession';
 import { getPublicKey } from '../../service/user_service'
 
 function Chat() {
-  const {userData, receiverData, updateReceiverData, keyPair, socket} = useUserContext()
+  const {userData, setToken, defineToken, receiverData, updateReceiverData, keyPair, socket} = useUserContext()
 
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  
-
+    const handleLogout = () =>{
+      setToken("")
+      defineToken("")
+      navigate("/")
+    }
   useEffect(()=>{
     const fetch = async ()=>{
       console.log("receiver data: ",receiverData)
@@ -27,7 +30,10 @@ function Chat() {
       
     }
     fetch()
+
   }, [receiverData])
+
+  
   const receive = async () => {
       const newMessage = await receiveMessageSocket(socket, userData["id"], keyPair.privateKey, receiverData.publicKey)
       console.log("NewMessage: ", newMessage)
