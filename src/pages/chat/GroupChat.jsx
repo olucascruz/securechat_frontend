@@ -3,11 +3,15 @@ import { useUserContext } from '../../utils/userContext';
 import { sendMessageGroupSocket, receiveMessageGroupSocket } from '../../utils/handleMessage'
 import {defineGroupUsersIdWithPublicKey} from '../../utils/handleSession';
 import { getPublicKey } from '../../service/user_service'
-import { ChatStyled } from '../chat/ChatStyle';
-import MessageBubbleGroup from './MessageBubbleGroup';
+import { ChatStyled } from '../../components/chat/ChatStyle';
+import MessageBubbleGroup from '../../components/groupChat/MessageBubbleGroup';
+import logoChatSeguro from '../../assets/logoChatSeguro.png'
+import { IoIosArrowBack } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 
 function GroupChat() {
   const {userData, updateGroupData, groupData, keyPair, socket} = useUserContext()
+  const navigate = useNavigate()
 
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -32,7 +36,6 @@ function GroupChat() {
               const response = await getPublicKey(id);
               newObjectIdWithKey[id] = response.public_key
                        
-
             } catch (error) {
               console.error('Erro:', error);
             }
@@ -97,11 +100,20 @@ function GroupChat() {
       }
       setInputValue("")
   };
+  const BackListChat = () =>{
+    navigate("/listChat")
+  }
+
     return (
       <ChatStyled>
-      <h3>
+      <header className="headerChat">
+      <IoIosArrowBack className="arrowBack" onClick={BackListChat}/>
+      <img className="logoChat" src={logoChatSeguro} alt="" onClick={BackListChat}/>
+      <h3 className="receiverName">
          {groupData ? groupData["name"]: null} 
       </h3>
+      </header>
+      
         <p>Chat</p>
         <ul id="msgs" ref={messageListRef}>
           {messages ? messages.map((message, index)=>{

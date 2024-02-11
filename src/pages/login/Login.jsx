@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import {generateKeyAndExtractPublic} from "../../service/cryptography_service" 
 import { useUserContext } from "../../utils/userContext";
 import { defineToken, defineUserData, defineUserKeyPair, clearSessionStorage } from "../../utils/handleSession";
-import { InputBase } from "../utilsComponents/InputBase";
-import { InputPassword } from "../utilsComponents/InputPassword";
-import {ButtonSubmit} from "../utilsComponents/ButtonSubmit"
-import { FormBase } from "../utilsComponents/FormBase";
+import { InputBase } from "../../components/utilsComponents/InputBase";
+import { InputPassword } from "../../components/utilsComponents/InputPassword";
+import {ButtonSubmit} from "../../components/utilsComponents/ButtonSubmit"
+import { FormBase } from "../../components/utilsComponents/FormBase";
 import { useEffect } from "react";
-import { LoginStyled } from "./loginStyle";
+import { LoginStyled } from "../../components/login/loginStyle";
 import logoChatSeguro from '../../assets/logoChatSeguro.png'
 
 function Login() {

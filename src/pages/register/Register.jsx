@@ -1,12 +1,12 @@
 import { registerUser} from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom";
-import {generateKeyAndExtractPublic} from "../../service/cryptography_service" 
-import { RegisterStyled } from "./registerStyle.jsx";
-import { FormBase } from "../utilsComponents/FormBase.jsx";
-import { InputBase } from "../utilsComponents/InputBase.jsx";
-import { InputPassword } from "../utilsComponents/InputPassword.jsx";
+import {generateKeyAndExtractPublic} from "../../service/cryptography_service.js" 
+import { RegisterStyled } from "../../components/register/registerStyle.jsx";
+import { FormBase } from "../../components/utilsComponents/FormBase.jsx";
+import { InputBase } from "../../components/utilsComponents/InputBase.jsx";
+import { InputPassword } from "../../components/utilsComponents/InputPassword.jsx";
 import logoChatSeguro from '../../assets/logoChatSeguro.png'
-import { ButtonSubmit } from "../utilsComponents/ButtonSubmit.jsx";
+import { ButtonSubmit } from "../../components/utilsComponents/ButtonSubmit.jsx";
 
 function Register() {
   const navigate = useNavigate()

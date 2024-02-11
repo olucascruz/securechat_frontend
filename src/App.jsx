@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
-import Login from './components/login/login'
-import Chat from './components/chat/chat'
-import Register from './components/register/register'
-import CreateGroup from './components/createGroup/createGroup'
-import GroupChat from './components/groupChat/groupChat'
+import Login from './pages/login/Login'
+import Chat from './pages/chat/Chat'
+import Register from './pages/register/Register'
+import CreateGroup from './pages/createGroup/CreateGroup'
+import GroupChat from './pages/chat/GroupChat'
 import './App.css'
 import { HashRouter as Router, Routes, Route, useNavigate, useLocation} from 'react-router-dom';
 import { UserProvider } from './utils/userContext'
 import { recoverToken} from './utils/handleSession'
-import ListChat from './components/listChat/ListChat'
+import ListChat from './pages/listChat/ListChat'
 
 function App() {
   const navigate = useNavigate()

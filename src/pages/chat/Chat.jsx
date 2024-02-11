@@ -3,9 +3,9 @@ import { useUserContext } from '../../utils/userContext';
 import { sendMessageSocket, receiveMessageSocket } from '../../utils/handleMessage'
 import {defineReceiverPublicKey} from '../../utils/handleSession';
 import { getPublicKey } from '../../service/user_service'
-import { ChatStyled } from './ChatStyle';
+import { ChatStyled } from '../../components/chat/ChatStyle';
 import logoChatSeguro from '../../assets/logoChatSeguro.png'
-import MessageBubble from './MessageBubble';
+import MessageBubble from '../../components/chat/MessageBubble';
 import { IoIosArrowBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 

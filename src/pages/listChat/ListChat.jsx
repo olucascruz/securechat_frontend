@@ -5,9 +5,9 @@ import { useUserContext } from "../../utils/userContext.jsx"
 import { getGroups } from "../../service/group_service.js";
 import { defineReceiver} from "../../utils/handleSession.js";
 import { defineToken } from "../../utils/handleSession.js";
-import ButtonGroup from "./ButtonGroup.jsx";
-import { ListChatStyled } from "./ListChatStyle.jsx";
-import ItemChat from "./ItemChat.jsx";
+import ButtonGroup from "../../components/listChat/ButtonGroup.jsx";
+import { ListChatStyled } from "../../components/listChat/ListChatStyle.jsx";
+import ItemChat from "../../components/listChat/ItemChat.jsx";
 
 function ListChat() {
     const {updateReceiverData, socket, userData, keyPair, setToken, token} = useUserContext()

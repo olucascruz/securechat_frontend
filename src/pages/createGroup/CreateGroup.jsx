@@ -3,12 +3,12 @@ import { getUsers } from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom"
 import { useUserContext } from "../../utils/userContext.jsx"
 import { createGroups } from "../../service/group_service.js";
-import { ListChatStyled } from "../listChat/ListChatStyle.jsx";
-import ItemChat from "../listChat/ItemChat.jsx";
-import { InputBase } from "../utilsComponents/InputBase.jsx";
-import { FormBase } from "../utilsComponents/FormBase.jsx"
-import { ButtonSubmit } from "../utilsComponents/ButtonSubmit.jsx"
-import { ButtonBase } from "../utilsComponents/ButtonBase.jsx";
+import { ListChatStyled } from "../../components/listChat/ListChatStyle.jsx";
+import ItemChat from "../../components/listChat/ItemChat.jsx";
+import { InputBase } from "../../components/utilsComponents/InputBase.jsx";
+import { FormBase } from "../../components/utilsComponents/FormBase.jsx"
+import { ButtonSubmit } from "../../components/utilsComponents/ButtonSubmit.jsx"
+import { ButtonBase } from "../../components/utilsComponents/ButtonBase.jsx";
 
 function CreateGroup() {
     const {socket, userData} = useUserContext()
