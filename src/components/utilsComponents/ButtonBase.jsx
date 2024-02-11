@@ -21,12 +21,10 @@ const StyledButton = styled.button`
 `;
 
 // Componente funcional que renderiza o botão estilizado
-const ButtonBase = ({ onClick, children }) => {
+export function ButtonBase ({ onClick, children }){
   return (
     <StyledButton onClick={onClick}>
       {children}
     </StyledButton>
   );
 };
-
-export default ButtonBase;

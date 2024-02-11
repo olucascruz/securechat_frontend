@@ -63,7 +63,7 @@ function Login() {
             "privateKey":keyPair.privateKey
           }
           setKeyPair(userKeyPair)
-          navigate('users', { replace: true })
+          navigate('listChat', { replace: true })
         };
       }
       

@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react"
 import { getUsers, logoutUser } from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom"
-import { useUserContext } from "../../utils/userContext"
+import { useUserContext } from "../../utils/userContext.jsx"
 import { getGroups } from "../../service/group_service.js";
 import { defineReceiver} from "../../utils/handleSession.js";
 import { defineToken } from "../../utils/handleSession.js";
 import ButtonGroup from "./ButtonGroup.jsx";
-import { ListChatStyled } from "./listChatStyle.jsx";
+import { ListChatStyled } from "./ListChatStyle.jsx";
 import ItemChat from "./ItemChat.jsx";
-function ListUsers() {
-    const {updateReceiverData, socket, userData, updateGroupData, keyPair, setToken, token} = useUserContext()
+
+function ListChat() {
+    const {updateReceiverData, socket, userData, keyPair, setToken, token} = useUserContext()
     const [users, setUsers] = useState([])
     const [groups, setGroups] = useState([])
 
@@ -39,6 +40,7 @@ function ListUsers() {
                 }));
                 setUsers(usersArray);
     }
+
     const updateGroups = (groupResult) =>{
         const groupArray = Object.keys(groupResult).map(key => ({
             ...groupResult[key]
@@ -48,7 +50,18 @@ function ListUsers() {
     
     }
 
-    // CÓDIGO É EXECUTADO QUANDO O COMPONENTE É RENDERIZADO
+    const fetchData = async () =>{
+        const usersResult = await getUsers()
+        if(userData && userData["id"]){
+            
+            const  groupResult = await getGroups(userData["id"])
+            console.log("groupResult", groupResult)
+            updateGroups(groupResult)  
+            updateUsers(usersResult)
+
+        } 
+    }
+    
     // Responsável por pegar os usuários
     useEffect(()=>{
         console.log("TOKEN: ",token)
@@ -58,23 +71,13 @@ function ListUsers() {
                 fetchData()
             })
         }
-        const fetchData = async () =>{
-            const  usersResult = await getUsers()
-            if(userData && userData["id"]){
-                
-                updateUsers(usersResult)
-                const  groupResult = await getGroups(userData["id"])
-                updateGroups(groupResult)
-                
-            } 
-        }
+
         fetchData()
     },[userData, socket])
     
     
-
     const handleClickCreateGroup = () => {
-        navigate("/add_group")
+        navigate("/createGroup")
     }
     
 
@@ -86,43 +89,39 @@ function ListUsers() {
     }
 
     
-
     return (
-      <>
-      <button onClick={handleLogout} >sair</button>
+    <ListChatStyled>
+      <header className="headerChat">
+        <button className="buttonLogout" onClick={handleLogout} >sair</button>
+      </header>
       <h3> Bem vindo(a) {userData ? userData["username"]: null}</h3>
-        <div id="viewUsers">
-            <ListChatStyled>
-            <p>Grupos - {groups.length}</p><button onClick={handleClickCreateGroup}>
-                Create group
+             
+        <div className="headerSectionGroups">
+            <p className="titleList" >
+                Grupos - {groups ? groups.length: null}
+            </p>
+            <button className="buttonCreateGroup" onClick={handleClickCreateGroup}>
+                +
             </button>
-            <ul id="groups">
-                    {groups.length > 0 ? groups.map((group, index) => (
-                    
-                        <ButtonGroup index={index} group={group}/>
-                        
-                        
-                            
-                        
-                    
-                    )): null}
-                </ul>
-                </ListChatStyled>
-            <h3>Users</h3>
-            <ul style={{display:"flex", justifyContent:"center", flexDirection: "column"}} id="users">
-                {users ? users.map((user, index) => 
-                (
-                <ItemChat index={index} user={user}/>
-
-                )): null}
-            </ul>
-            
-        
-            
-
         </div>
-      </>
+        
+        <ul key={"itIsAGroup"}id="groups">
+            {groups ? groups.map((group, index) => 
+            (
+                <ButtonGroup key={`group_${index}_${group.id}`} group={group}/>
+            )): null}
+        </ul>
+        <p className="titleList">Users</p>
+        <ul key={"itIsAUser"} id="users">
+            {users ? users.map((user, index) => 
+            (
+            <ItemChat key={`user_${index}_${user.id}`} user={user}/>
+
+            )): null}
+        </ul>
+              
+    </ListChatStyled>
     )
   }
   
-  export default ListUsers
+  export default ListChat

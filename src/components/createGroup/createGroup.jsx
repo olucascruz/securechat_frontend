@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react"
 import { getUsers } from "../../service/user_service.js"
 import { useNavigate } from "react-router-dom"
-import { useUserContext } from "../../utils/userContext"
+import { useUserContext } from "../../utils/userContext.jsx"
 import { createGroups } from "../../service/group_service.js";
+import { ListChatStyled } from "../listChat/ListChatStyle.jsx";
+import ItemChat from "../listChat/ItemChat.jsx";
+import { InputBase } from "../utilsComponents/InputBase.jsx";
+import { FormBase } from "../utilsComponents/FormBase.jsx"
+import { ButtonSubmit } from "../utilsComponents/ButtonSubmit.jsx"
+import { ButtonBase } from "../utilsComponents/ButtonBase.jsx";
 
 function CreateGroup() {
     const {socket, userData} = useUserContext()
@@ -44,15 +50,6 @@ function CreateGroup() {
       }, [socket, users])
 
 
-    const handleCheckboxChange = (userId) => {
-      const isSelected = selectedUsers.includes(userId);
-
-      if (isSelected) {
-        setSelectedUsers(selectedUsers.filter((id) => id !== userId));
-      } else {
-        setSelectedUsers([...selectedUsers, userId]);
-      }
-    };
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -68,37 +65,29 @@ function CreateGroup() {
         }
     }
     return (
-      <>
-      <h3> Seja um adm: {userData["username"]}</h3>
+      <ListChatStyled>
       <div id="viewUsers">
-        <p> Crie um novo grupo </p>
-        <form id="formCreateGroup" onSubmit={handleSubmit}>
-            <label htmlFor="nameGroup">name group:</label>
+        <FormBase notColor={true} id="formCreateGroup" onSubmit={handleSubmit}>
+            <p className="titleList"> Crie um novo grupo </p>
+            <label htmlFor="nameGroup">Nome do grupo:</label>
             <br />
-            <input placeholder="name group" type="text" name="nameGroup" id="nameGroup" />
+            <InputBase placeholder="nome do grupo" type="text" name="nameGroup" id="nameGroup" />
             <br />
-            <p><b>Select members for group:</b></p>
+            <p className="titleList">Selecione os membros do grupo:</p>
             <ul id="users">
               {users.map((user, index) => (
-              <li key={index}>
-                  <span>{user.username}:{user.is_online.toString()}</span>
-                  <input type="checkbox"
-                  name={user.username}
-                  id={user.id}
-                  checked={selectedUsers.includes(user.id)}
-                  onChange={() => handleCheckboxChange(user.id)}
-                  />
-              </li>
+                <ItemChat key={`user_${index}_${user.id}`} user={user} isToAddGroup={true} selectedUsers={selectedUsers} setSelectedUsers={setSelectedUsers}/>
               ))}
             </ul>
-            <hr />
-            <button type="submit"> Create Group </button>
+            <br />
+            <ButtonSubmit>Create Group</ButtonSubmit>
+            {/* <Button type="submit">  </button> */}
             <br />
             <br />
-            <button onClick={()=>navigate('/users')}> back </button>
-        </form>
+            <ButtonBase onClick={()=>navigate('/listChat')}> voltar </ButtonBase>
+        </FormBase>
       </div>
-      </>
+      </ListChatStyled>
     )
   }
   

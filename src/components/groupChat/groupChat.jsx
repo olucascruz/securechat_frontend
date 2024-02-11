@@ -1,15 +1,21 @@
-import {useEffect, useState } from 'react';
+import {useEffect, useState, useRef} from 'react';
 import { useUserContext } from '../../utils/userContext';
 import { sendMessageGroupSocket, receiveMessageGroupSocket } from '../../utils/handleMessage'
 import {defineGroupUsersIdWithPublicKey} from '../../utils/handleSession';
 import { getPublicKey } from '../../service/user_service'
+import { ChatStyled } from '../chat/ChatStyle';
+import MessageBubbleGroup from './MessageBubbleGroup';
 
 function GroupChat() {
   const {userData, updateGroupData, groupData, keyPair, socket} = useUserContext()
 
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  
+  const messageListRef = useRef(null);
+  useEffect(() => {
+    // Mantém o scroll na parte inferior sempre que as mensagens mudarem
+    messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+  }, [messages]);
 
   useEffect(()=>{
     const fetch = async ()=>{
@@ -92,17 +98,19 @@ function GroupChat() {
       setInputValue("")
   };
     return (
-      <>
+      <ChatStyled>
       <h3>
-        {userData ? userData["username"]: null} conversando no grupo: {groupData ? groupData["name"]: null} 
+         {groupData ? groupData["name"]: null} 
       </h3>
-      <div id="chat">
         <p>Chat</p>
-        <ul id="msgs">
+        <ul id="msgs" ref={messageListRef}>
           {messages ? messages.map((message, index)=>{
-              return <li key={index}>
-                  {message.username}:{message.message}
-              </li>
+             return <MessageBubbleGroup 
+              username={userData.username} 
+              key={index}
+              message={message}
+              />              
+              
           }): null}
         </ul>
         <form id="formMsg">   
@@ -113,8 +121,7 @@ function GroupChat() {
             onChange={(event)=>setInputValue(event.target.value)}/>
           <button onClick={sendMessage} type="submit">send</button>
         </form>
-      </div>
-      </>
+      </ChatStyled>
     )
   }
   

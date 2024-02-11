@@ -8,8 +8,6 @@ export const RegisterStyled = styled.div`
   border-radius: 5%;
 
   #formRegister{
-        height: 100vh;
-        position: fixed;
         right: 0;
         background-color: #a0e1ff;
         width: 25%;
@@ -28,5 +26,13 @@ export const RegisterStyled = styled.div`
 
     .titleForm{
         color:black;
+    }
+
+    img{
+        margin: auto;
+        left: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
     }
 `;

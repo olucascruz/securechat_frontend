@@ -6,9 +6,14 @@ export const LoginStyled = styled.div`
   height: 100vh;
   border-radius: 5%;
 
+  img{
+        margin: auto;
+        left: 0;
+        right: 0;
+        width: 300px;
+        height: 300px;
+    }
   #formLogin{
-        height: 100vh;
-        position: fixed;
         right: 0;
         background-color: #a0e1ff;
         width: 25%;

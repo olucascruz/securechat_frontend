@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import {  getIsOnline } from "../../service/user_service.js"
-
+import { getIsOnline } from "../../service/user_service.js"
+import { defineGroup, recoverGroup } from '../../utils/handleSession.js';
+import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../../utils/userContext.jsx';
 // Definindo o componente de botão estilizado
 const StyledButton = styled.li`
   padding: 10px 10px 10px 10px;
   font-size: 16px;
-  background-color: #0b345e;
+  background-color: #292929;
   color: white;
+  width: 60%;
+  height: 30px;
   border: none;
   border-radius: 1px;
   cursor: pointer;
@@ -30,8 +34,10 @@ const StyledButton = styled.li`
 `;
 
 // Componente funcional que renderiza o botão estilizado
-const ButtonGroup = ({ group, index }) => {
+const ButtonGroup = ({group}) => {
+    const {updateGroupData} = useUserContext()
     const [isDisabled, setDisabled] = useState(true) 
+    const navigate = useNavigate()
     useEffect(()=>{
         const checkIsDisabled = async () =>{
         
@@ -51,6 +57,7 @@ const ButtonGroup = ({ group, index }) => {
     }, [])
 
   const handleClickChatWithGroup = (param) => () =>{
+      console.log("isDisabled", isDisabled)
       if(isDisabled) return
       defineGroup(param)
 
@@ -58,12 +65,13 @@ const ButtonGroup = ({ group, index }) => {
           const recoveredGroupData = recoverGroup()
           updateGroupData({ type: 'updateAll', 
           payload: recoveredGroupData})
-          navigate("/group_chat")
+          navigate("/groupChat")
         }, 200);
   }
+
   
   return (
-    <StyledButton key={index} onClick={handleClickChatWithGroup(group)}>
+    <StyledButton onClick={handleClickChatWithGroup(group)}>
       <span>{group.name}</span>
     </StyledButton>
   );
