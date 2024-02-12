@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useReducer } from 'react';
-import { recoverUserData, recoverKeys, recoverReceiverData, recoverToken, recoverGroup  } from './handleSession'
+import { recoverUserData, recoverKeys, recoverReceiverData, recoverToken, recoverGroup  } from '../storage/handleSession'
 import io from 'socket.io-client';
 
 const UserContext = createContext();

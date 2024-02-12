@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from "react-router-dom"
-import { defineReceiver, recoverReceiverData} from "../../utils/handleSession.js";
-import { useUserContext } from '../../utils/userContext.jsx';
+import { defineReceiver, recoverReceiverData} from "../../core/storage/handleSession.js";
+import { useUserContext } from '../../core/context/userContext.jsx';
 
 // Definindo o componente de botão estilizado
 export const ItemChatStyled = styled.li`

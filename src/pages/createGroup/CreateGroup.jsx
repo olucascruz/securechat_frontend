@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react"
-import { getUsers } from "../../service/user_service.js"
+import { getUsers } from "../../core/service/userService.js"
 import { useNavigate } from "react-router-dom"
-import { useUserContext } from "../../utils/userContext.jsx"
-import { createGroups } from "../../service/group_service.js";
+import { useUserContext } from "../../core/context/userContext.jsx"
+import { createGroups } from "../../core/service/groupService.js";
 import { ListChatStyled } from "../../components/listChat/ListChatStyle.jsx";
 import ItemChat from "../../components/listChat/ItemChat.jsx";
 import { InputBase } from "../../components/utilsComponents/InputBase.jsx";

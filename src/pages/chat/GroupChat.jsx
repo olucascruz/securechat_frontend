@@ -1,8 +1,8 @@
 import {useEffect, useState, useRef} from 'react';
-import { useUserContext } from '../../utils/userContext';
-import { sendMessageGroupSocket, receiveMessageGroupSocket } from '../../utils/handleMessage'
-import {defineGroupUsersIdWithPublicKey} from '../../utils/handleSession';
-import { getPublicKey } from '../../service/user_service'
+import { useUserContext } from '../../core/context/userContext';
+import { sendMessageGroupSocket, receiveMessageGroupSocket } from '../../core/service/handleMessage'
+import {defineGroupUsersIdWithPublicKey} from '../../core/storage/handleSession';
+import { getPublicKey } from '../../core/service/userService'
 import { ChatStyled } from '../../components/chat/ChatStyle';
 import MessageBubbleGroup from '../../components/groupChat/MessageBubbleGroup';
 import logoChatSeguro from '../../assets/logoChatSeguro.png'
