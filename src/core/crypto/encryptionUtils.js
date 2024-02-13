@@ -36,7 +36,7 @@ export const shareKeyAndEncrypt = async (privateKey, destinationPublicKey, messa
   const privateKeyObj = ec.keyFromPrivate(privateKey, 'hex');
   const sharedKeyArray = privateKeyObj.derive(ec.keyFromPublic(destinationPublicKey, 'hex').getPublic()).toArray();
 
-  console.log("sharedKeyArray", sharedKeyArray)
+  console.log("shared key array - fun -> shareKeyAndEncrypt", sharedKeyArray)
   const sharedKeyBuffer = new Uint8Array(sharedKeyArray).buffer;
 
   const importedKey = await window.crypto.subtle.importKey(
@@ -49,7 +49,7 @@ export const shareKeyAndEncrypt = async (privateKey, destinationPublicKey, messa
   // const sharedKeyBuffer=new Uint8Array(sharedKey)
   const iv = window.crypto.getRandomValues(new Uint8Array(16));
   
-  console.log("iv", iv)
+  console.log("iv - fun -> shareKeyAndEncrypt", iv)
   let cipher = null;
   try {
       cipher = await window.crypto.subtle.encrypt({
@@ -123,11 +123,11 @@ export const decryptMessage = async (privateKey,
   );
   
   let iv = null
-  let ciphertext = null
+  let cipherText = null
   
   try{
     iv = encryptedMessage.slice(0, 16);
-    ciphertext = encryptedMessage.slice(16);
+    cipherText = encryptedMessage.slice(16);
   }catch(error){
     console.log("slice error:", error);
   }
@@ -141,43 +141,21 @@ export const decryptMessage = async (privateKey,
     counter: iv,
     length: 128 }, 
     importedKey, 
-    ciphertext
+    cipherText
     );  
   } catch (error) {
-    console.log("decifer:",error)
+    console.log("decipher:",error)
   }
 
-  console.log("text decifer:", decipher)
+  console.log("text decipher:", decipher)
   
   let decryptedMessage = ""
   try{
     decryptedMessage = new TextDecoder().decode(decipher);
   }catch(error){
-    console.log("decifer error:",error)
+    console.log("decipher error:",error)
   }
 
   console.log(decryptedMessage)
   return decryptedMessage;
 };
-
-// // Person A
-// const personA = generateKeyAndExtractPublic();
-
-// // Person B
-// const personB = generateKeyAndExtractPublic();
-
-// // Person A shares key and encrypts message for Person B
-// const encryptedMessageAtoB = shareKeyAndEncrypt(personA.privateKey, personB.publicKey, 'Hi Person B, I am Person A! MOTO MOTO OIEEEEE');
-// console.log('Person A encrypted message for Person B:', encryptedMessageAtoB);
-
-// // Person B decrypts message from Person A
-// const decryptedMessageB = decryptMessage(personB.privateKey, personA.publicKey, Buffer.from(encryptedMessageAtoB, 'hex'));
-// console.log('Person B decrypted message from Person A:', decryptedMessageB);
-
-// // Additional simulation: Person C
-// const personC = generateKeyAndExtractPublic();
-// const encryptedMessageAtoC = shareKeyAndEncrypt(personA.privateKey, personC.publicKey, 'Hi Person C, message from Person A for you!');
-// console.log('Person A encrypted message for Person C:', encryptedMessageAtoC);
-
-// const decryptedMessageC = decryptMessage(personC.privateKey, personA.publicKey, Buffer.from(encryptedMessageAtoC, 'hex'));
-// console.log('Person C decrypted message from Person A:', decryptedMessageC);

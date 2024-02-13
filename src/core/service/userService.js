@@ -15,24 +15,22 @@ export const getUsers = async () =>{
 }
 
 
-export const registerUser = async (username, password, publicKey) =>{
+export const registerUser = async (username, password) =>{
     const data = {
         username: username,
         password: password,
-        public_key: publicKey
     };
 
     const registerEndpoint = 'http://127.0.0.1:5000/register';
-    axios.post(registerEndpoint, data)
-  .then(response => {
-    // Manipulando os dados da resposta
-    console.log('Dados da resposta:', response.data);
-    return response.status
-  })
-  .catch(error => {
+    try{
+      const response = await axios.post(registerEndpoint, data)
+      return response.status
+    
+    }catch(error) {
     // Lidando com erros
-    console.error('Erro na requisição:', error);
-  });
+      console.error('Erro na requisição:', error);
+      return null
+    };
 
 }
 
@@ -43,9 +41,9 @@ export const loginUser = async (username, password, publicKey) =>{
       public_key: publicKey
   };
 
-  const registerEndpoint = 'http://127.0.0.1:5000/login';
+  const loginEndpoint = 'http://127.0.0.1:5000/login';
   try{
-  const response = await axios.post(registerEndpoint, data)
+  const response = await axios.post(loginEndpoint, data)
   return response
 
   } catch(error){
@@ -65,5 +63,37 @@ export const getPublicKey = async (user_id) =>{
       console.error('Erro na requisição:', error);
       return []; // Retorna um array vazio em caso de erro, ou você pode lidar com o erro de outra forma
   }
+}
+
+export const getIsOnline = async (user_id) =>{
+  const getIsOnlineEndpoint = `http://127.0.0.1:5000/getIsOnline?user_id=${user_id}`;
+  try {
+    const response = await axios.get(getIsOnlineEndpoint);
+    // Retornando os dados da resposta
+    return response.data;
+  } catch (error) {
+      // Lidando com erros
+      console.error('Erro na requisição:', error);
+      return []; // Retorna um array vazio em caso de erro, ou você pode lidar com o erro de outra forma
+  }
+
+}
+
+
+export const logoutUser = async (userId) =>{
+  const data = {
+    "id":userId
+  };
+
+  const logoutEndpoint = 'http://127.0.0.1:5000/logout';
+  try{
+    const response = await axios.post(logoutEndpoint, data)
+    return response.status
+  }catch(error) {
+  // Lidando com erros
+    console.error('Erro na requisição:', error);
+    return null
+  };
+
 }
 

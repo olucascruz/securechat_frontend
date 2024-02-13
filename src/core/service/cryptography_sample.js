@@ -47,7 +47,7 @@ console.log("-------------------------------------------------------------------
 console.log('Pessoa B enviou sua chave pública para Pessoa A:', chavePublicaB);
 
 // ----------------------------------------------------------------------------------------------------
-//                    SIMULAÇÂO PESSOA A QUER ENVIAR MENSAGEM PARA PESSOA B
+//                    SIMULAR PESSOA A QUER ENVIAR MENSAGEM PARA PESSOA B
 // ----------------------------------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------------------------------
@@ -67,14 +67,14 @@ const chaveCompartilhadaA = chavePrivadaA.derive(ec_1.keyFromPublic(chavePublica
 //                    PASSO 4 - ENVIA A MENSAGEM CIFRADA PARA O SERVIDOR
 // ----------------------------------------------------------------------------------------------------
 
-const mensagemOriginalA = 'Oi Pessoa B, sou a Pessoa A! MOTO MOTO OIEEEEE';
+const mensagemOriginalA = 'Oi Pessoa B, sou a Pessoa A! MOTO MOTO OI';
 const ivA = crypto.randomBytes(16); // IV único para cada mensagem
 const cipherA = crypto.createCipheriv('aes-256-ctr', Buffer.from(chaveCompartilhadaA), ivA);
 const mensagemCriptografadaA = Buffer.concat([ivA, cipherA.update(mensagemOriginalA, 'utf-8'), cipherA.final()]);
 console.log('Pessoa A cifrou a mensagem:', mensagemCriptografadaA.toString('hex'));
 
 // ----------------------------------------------------------------------------------------------------
-//                  SIMULAÇÂO PESSOA B RECEBE A MENSAGEM CIFRADA E DECRIPTOGRAFA ELA
+//                  SIMULA PESSOA B RECEBE A MENSAGEM CIFRADA E DESCRIPTOGRAFA ELA
 // ----------------------------------------------------------------------------------------------------
 
 // ----------------------------------------------------------------------------------------------------

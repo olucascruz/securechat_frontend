@@ -1,31 +1,38 @@
 import { useEffect, useState } from 'react'
-import Login from './components/login/login'
-import ListUsers from './components/list_users/list_users'
-import Chat from './components/chat/chat'
-import Register from './components/register/register'
-import CreateGroup from './components/create_group/create_group'
-import axios from 'axios'
+import Login from './pages/login/Login'
+import Chat from './pages/chat/Chat'
+import Register from './pages/register/Register'
+import CreateGroup from './pages/createGroup/CreateGroup'
+import GroupChat from './pages/chat/GroupChat'
 import './App.css'
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import { UserProvider } from './utils/userContext'
+import { HashRouter as Router, Routes, Route, useNavigate, useLocation} from 'react-router-dom';
+import { UserProvider } from './core/context/userContext'
+import { recoverToken} from './core/storage/handleSession'
+import ListChat from './pages/listChat/ListChat'
 
-function App() {  
+function App() {
+  const navigate = useNavigate()
+  const location = useLocation();
+  
+
   useEffect(()=>{
-    return async () => {
-      // resoponse_logout = await axios.post("http://127.0.0.1:5000/logout", {"username":username})
-    };
-  },[])
+    const recoveredToken = recoverToken()
+    console.log(location)
+    if(location.pathname != "/register" && location.pathname != "/"){
+      recoveredToken ? null : navigate("/")
+    }
+  }, [recoverToken])
   
   return (
     <>
       <UserProvider>
       <Routes>
-        <Route path="/add_group" element={<CreateGroup/>} />
-        <Route path="/users" element={<ListUsers/>} />
+        <Route path="/groupChat" element={<GroupChat/>} />
+        <Route path="/createGroup" element={<CreateGroup/>} />
+        <Route path="/listChat" element={<ListChat/>} />
         <Route path="/chat" element={<Chat/>} />
         <Route path="/register" element={<Register/>}/>
         <Route exact path="/" element={<Login/>} />
-
       </Routes>
       </UserProvider>
     </>
