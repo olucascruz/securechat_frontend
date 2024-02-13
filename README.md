@@ -1,8 +1,14 @@
-# React + Vite
+# Frontend Chat seguro
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Contexto:
+<br>
+Projeto acadêmico  criado  para disciplina de segurança da informação.
 
-Currently, two official plugins are available:
+Objetivo: Desenvolver um chat seguro usa criptografia ao enviar as mensagens
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Como executar:
+- npm install
+- npm run dev
+
+Tecnologias usadas:
+-  React
