@@ -36,6 +36,38 @@ export const ListChatStyled = styled.div`
     flex-direction:column;
     align-items: center;
     margin: 0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    overflow-y: scroll;
+  }
+    /* Estilo para a barra de rolagem */
+  ul::-webkit-scrollbar {
+    width: 10px; /* Largura da barra de rolagem */
+  }
+
+  /* Cor de fundo da barra de rolagem */
+  ul::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Cor de fundo */
+  }
+
+  /* Estilo do indicador da barra de rolagem */
+  ul::-webkit-scrollbar-thumb {
+    background-color: #0097C7; /* Cor do indicador */
+    border-radius: 5px; /* Borda arredondada */
+  }
+
+  /* Estilo do indicador da barra de rolagem quando está passando o mouse */
+  ul::-webkit-scrollbar-thumb:hover {
+    background-color: #555; /* Cor do indicador ao passar o mouse */
+  }
+
+  #users{
+    max-height: 370px;
+  }
+
+  #groups{
+    max-height: 165px;
+  
   }
 
 
