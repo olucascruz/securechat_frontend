@@ -1,6 +1,5 @@
-import { registerUser} from "../../service/user_service.js"
+import { registerUser} from "../../core/service/userService.js"
 import { useNavigate } from "react-router-dom";
-import {generateKeyAndExtractPublic} from "../../service/cryptography_service.js" 
 import { RegisterStyled } from "../../components/register/registerStyle.jsx";
 import { FormBase } from "../../components/utilsComponents/FormBase.jsx";
 import { InputBase } from "../../components/utilsComponents/InputBase.jsx";
@@ -19,13 +18,15 @@ function Register() {
 
       const username = usernameInput.value;
       const password = passwordInput.value;
-      const keyPair = generateKeyAndExtractPublic()
       // Registre o usuário
-      const response = await registerUser(username, password, keyPair.publicKey); // Supondo que registerUser
+      const response = await registerUser(username, password);
+
       console.log(response) 
-      if (response == 200){
-        alert("usuário registrado")
-      }
+      if (response != 200) alert("erro ao registrar usuário")
+        
+        
+      alert("usuário registrado")
+      
       
       navigate('', { replace: true })
     };

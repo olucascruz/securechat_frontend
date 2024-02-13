@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getIsOnline } from "../../service/user_service.js"
-import { defineGroup, recoverGroup } from '../../utils/handleSession.js';
+import { getIsOnline } from "../../core/service/userService.js"
+import { defineGroup, recoverGroup } from '../../core/storage/handleSession.js';
 import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '../../utils/userContext.jsx';
+import { useUserContext } from '../../core/context/userContext.jsx';
 // Definindo o componente de botão estilizado
 const StyledButton = styled.li`
   padding: 10px 10px 10px 10px;

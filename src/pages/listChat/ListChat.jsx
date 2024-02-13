@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react"
-import { getUsers, logoutUser } from "../../service/user_service.js"
+import { getUsers, logoutUser } from "../../core/service/userService.js"
 import { useNavigate } from "react-router-dom"
-import { useUserContext } from "../../utils/userContext.jsx"
-import { getGroups } from "../../service/group_service.js";
-import { defineReceiver} from "../../utils/handleSession.js";
-import { defineToken } from "../../utils/handleSession.js";
+import { useUserContext } from "../../core/context/userContext.jsx"
+import { getGroups } from "../../core/service/groupService.js";
+import { defineReceiver, defineToken} from "../../core/storage/handleSession.js";
 import ButtonGroup from "../../components/listChat/ButtonGroup.jsx";
 import { ListChatStyled } from "../../components/listChat/ListChatStyle.jsx";
 import ItemChat from "../../components/listChat/ItemChat.jsx";
@@ -105,14 +104,14 @@ function ListChat() {
             </button>
         </div>
         
-        <ul key={"itIsAGroup"}id="groups">
+        <ul id="groups">
             {groups ? groups.map((group, index) => 
             (
                 <ButtonGroup key={`group_${index}_${group.id}`} group={group}/>
             )): null}
         </ul>
         <p className="titleList">Users</p>
-        <ul key={"itIsAUser"} id="users">
+        <ul id="users">
             {users ? users.map((user, index) => 
             (
             <ItemChat key={`user_${index}_${user.id}`} user={user}/>

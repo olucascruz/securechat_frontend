@@ -1,8 +1,8 @@
-import { loginUser } from "../../service/user_service"
+import { loginUser } from "../../core/service/userService.js"
 import { useNavigate } from "react-router-dom";
-import {generateKeyAndExtractPublic} from "../../service/cryptography_service" 
-import { useUserContext } from "../../utils/userContext";
-import { defineToken, defineUserData, defineUserKeyPair, clearSessionStorage } from "../../utils/handleSession";
+import {generateKeyAndExtractPublic} from "../../core/crypto/encryptionUtils" 
+import { useUserContext } from "../../core/context/userContext";
+import { defineToken, defineUserData, defineUserKeyPair, clearSessionStorage } from "../../core/storage/handleSession";
 import { InputBase } from "../../components/utilsComponents/InputBase";
 import { InputPassword } from "../../components/utilsComponents/InputPassword";
 import {ButtonSubmit} from "../../components/utilsComponents/ButtonSubmit"

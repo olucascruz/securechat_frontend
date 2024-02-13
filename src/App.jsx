@@ -6,8 +6,8 @@ import CreateGroup from './pages/createGroup/CreateGroup'
 import GroupChat from './pages/chat/GroupChat'
 import './App.css'
 import { HashRouter as Router, Routes, Route, useNavigate, useLocation} from 'react-router-dom';
-import { UserProvider } from './utils/userContext'
-import { recoverToken} from './utils/handleSession'
+import { UserProvider } from './core/context/userContext'
+import { recoverToken} from './core/storage/handleSession'
 import ListChat from './pages/listChat/ListChat'
 
 function App() {
