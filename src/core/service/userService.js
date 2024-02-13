@@ -41,9 +41,9 @@ export const loginUser = async (username, password, publicKey) =>{
       public_key: publicKey
   };
 
-  const registerEndpoint = 'http://127.0.0.1:5000/login';
+  const loginEndpoint = 'http://127.0.0.1:5000/login';
   try{
-  const response = await axios.post(registerEndpoint, data)
+  const response = await axios.post(loginEndpoint, data)
   return response
 
   } catch(error){
@@ -85,9 +85,9 @@ export const logoutUser = async (userId) =>{
     "id":userId
   };
 
-  const registerEndpoint = 'http://127.0.0.1:5000/logout';
+  const logoutEndpoint = 'http://127.0.0.1:5000/logout';
   try{
-    const response = await axios.post(registerEndpoint, data)
+    const response = await axios.post(logoutEndpoint, data)
     return response.status
   }catch(error) {
   // Lidando com erros
