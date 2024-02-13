@@ -15,17 +15,17 @@ export const getUsers = async () =>{
 }
 
 
-export const registerUser = async (username, password, publicKey) =>{
+export const registerUser = async (username, password) =>{
     const data = {
         username: username,
         password: password,
-        public_key: publicKey
     };
 
     const registerEndpoint = 'http://127.0.0.1:5000/register';
     try{
       const response = await axios.post(registerEndpoint, data)
       return response.status
+    
     }catch(error) {
     // Lidando com erros
       console.error('Erro na requisição:', error);
