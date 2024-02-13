@@ -107,7 +107,7 @@ function ListChat() {
         <ul id="groups">
             {groups ? groups.map((group, index) => 
             (
-                <ButtonGroup key={`group_${index}_${group.id}`} group={group}/>
+                <ButtonGroup key={`group_${index}_${group.id}`} group={group} users={users}/>
             )): null}
         </ul>
         <p className="titleList">Users</p>

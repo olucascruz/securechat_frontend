@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useUserContext } from '../../core/context/userContext.jsx';
 // Definindo o componente de botão estilizado
 const StyledButton = styled.li`
+  display: flex;
+  justify-content: space-between;
   padding: 10px 10px 10px 10px;
   font-size: 16px;
   background-color: #292929;
@@ -34,20 +36,22 @@ const StyledButton = styled.li`
 `;
 
 // Componente funcional que renderiza o botão estilizado
-const ButtonGroup = ({group}) => {
+const ButtonGroup = ({group, users}) => {
     const {updateGroupData} = useUserContext()
     const [isDisabled, setDisabled] = useState(true) 
     const navigate = useNavigate()
+    const [membersOnline, setMembersOnline] = useState([])
     useEffect(()=>{
         const checkIsDisabled = async () =>{
         
-            let membersOnline = [];
             console.log("what is a group:", group)
             // Usando forEach para iterar sobre os membros do grupo
             await Promise.all(group.members.map(async (member) => {
                 const response = await getIsOnline(member);
                 const memberIsOnline = response.is_online;
-                if (memberIsOnline) membersOnline.push(member);
+                if (memberIsOnline){
+                  setMembersOnline(prevMembers => [...prevMembers, member]);
+                }
             }));
             setDisabled(membersOnline.length < 3)
         }
@@ -69,10 +73,17 @@ const ButtonGroup = ({group}) => {
         }, 200);
   }
 
-  
+  const namesUsersOnline = users.filter(user => membersOnline.includes(user.id))
+  .map(user => user.username)
+  const namesUsersOnlineString = namesUsersOnline.join(" \n ");
+
   return (
     <StyledButton onClick={handleClickChatWithGroup(group)}>
       <span>{group.name}</span>
+      <span 
+      title={namesUsersOnlineString}>
+        online:{namesUsersOnline.length}
+      </span>
     </StyledButton>
   );
 };
